@@ -30,15 +30,10 @@ module simple_core (
     logic [31:0] alu_result;
     logic stop;
 	 
-	 reg [3:0] inst_to_regFile1;
-	 reg [3:0] inst_to_regFile2;
-	 
 	 reg [31:0] regFile_to_ALU1;
 	 reg [31:0] regFile_to_ALU2;
 	 
-	 
-	 //simple_reg_file pipeReg1 (clk,source_reg_addr_1,dest_reg_addr_1,source_reg_val_1,dest_reg_value_1);
-	 //simple_reg_file pipeReg2 (clk,source_reg_addr_2,dest_reg_addr_2,source_reg_val_2,dest_reg_value_2);
+	 instruction_s inst_reg;
 	 
     
     always_ff @(posedge clk)
@@ -54,11 +49,10 @@ module simple_core (
             pc <= pc + 1;
         end
 		  
-		  inst_to_regFile1 = instruction.rs;
-		  inst_to_regFile2 = instruction.rd;
-		  
 		  regFile_to_ALU1 = rs_val;
 		  regFile_to_ALU2 = rd_val;
+		  
+		  inst_reg = instruction;
     end // always_ff
     
     // Instruction memory
@@ -73,20 +67,20 @@ module simple_core (
     simple_reg_file rf (
         .clk(clk),
         //.rs_addr_i(instruction.rs),
-		  .rs_addr_i(inst_to_regFile1),
+		  .rs_addr_i(inst_reg.rs),
         //.rd_addr_i(instruction.rd),
-		  .rd_addr_i(inst_to_regFile2),
+		  .rd_addr_i(inst_reg.rd),
         .rs_val_o(rs_val),
         .rd_val_o(rd_val)
     );
     
     // ALU
     simple_alu alu (
-        //.rd_i(rd_val),
-		  .rd_i(regFile_to_ALU1),
-        //.rs_i(rs_val),
-		  .rs_i(regFile_to_ALU2),
-        .op_i(instruction),
+        .rd_i(rd_val),
+		  //.rd_i(regFile_to_ALU1),
+        .rs_i(rs_val),
+		  //.rs_i(regFile_to_ALU2),
+        .op_i(inst_reg),
         .writes_rf_o(alu_result_valid),
         .result_o(alu_result),
         .stop_o(stop)

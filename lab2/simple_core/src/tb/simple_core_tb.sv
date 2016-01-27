@@ -15,6 +15,8 @@
 module simple_core_tb();
     logic clk;
     logic n_reset;
+	 logic n_reset_q;
+	 logic n_reset_qq;
     logic [31:0] alu_result;
     logic alu_result_valid;
     logic stop;
@@ -56,7 +58,7 @@ module simple_core_tb();
         begin
         
         // Clear stop signal shift register.
-        if (!n_reset)
+        if (!n_reset_qq)
             begin
             stop_shr <= 0;
             end
@@ -87,6 +89,11 @@ module simple_core_tb();
             end
         end
     end
+	 
+	 always@(posedge clk) begin
+		n_reset_q <= n_reset;
+		n_reset_qq <= n_reset_q;
+	 end
     
     simple_core dut (
         .clk(clk),

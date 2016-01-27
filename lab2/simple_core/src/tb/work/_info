@@ -7,7 +7,7 @@ z2
 !i10e 25
 !i10f 100
 cModel Technology
-Z0 dC:/Users/Kermit/Desktop/cse 141L lab2/basic_core-master/lab2/simple_core/src/tb
+Z0 dC:/Users/Kermit/Desktop/cse141Llab2/basic_core-master/lab2/simple_core/src/tb
 vsimple_alu
 Z1 DXx6 sv_std 3 std 0 22 <EOTafDcUY:cQeO^ICn]m3
 Z2 DXx4 work 18 simple_definitions 0 22 G;MBkMhkLS@Z2>aHz@1Hg0
@@ -27,7 +27,7 @@ Z5 8../simple_alu.sv
 Z6 F../simple_alu.sv
 Z7 L0 15
 Z8 OV;L;10.3d;59
-Z9 !s108 1453791655.288000
+Z9 !s108 1453877005.516000
 Z10 !s107 ../simple_alu.sv|
 Z11 !s90 -reportprogress|300|-work|work|../simple_alu.sv|
 !i113 1
@@ -64,19 +64,19 @@ r1
 !s85 0
 31
 !i10b 1
-!s100 aTZmoeZ`NjA3J66a]7LV]0
-IJH>E_69P]cXU`@WM6U`Bk3
+!s100 oVng8I^0^SPoRNc01Qhmo2
+I42_6OJOhkNi9L4TW]=>Vn0
 !s105 simple_core_sv_unit
 S1
 R0
-R4
-Z14 8../simple_core.sv
-Z15 F../simple_core.sv
+Z14 w1453876995
+Z15 8../simple_core.sv
+Z16 F../simple_core.sv
 R7
 R8
-Z16 !s108 1453791655.328000
-Z17 !s107 ../simple_core.sv|
-Z18 !s90 -reportprogress|300|-work|work|../simple_core.sv|
+Z17 !s108 1453877005.562000
+Z18 !s107 ../simple_core.sv|
+Z19 !s90 -reportprogress|300|-work|work|../simple_core.sv|
 !i113 1
 R12
 Xsimple_core_sv_unit
@@ -92,19 +92,42 @@ IAWkieK_E?`VdY@SRN?k4Y2
 !i103 1
 S1
 R0
-R4
 R14
 R15
+R16
 R13
 R8
-R16
 R17
 R18
+R19
+!i113 1
+R12
+vsimple_core_tb
+R1
+Z20 !s110 1453877005
+!i10b 1
+!s100 dIS]`Za2l1kIDo3fem=lI1
+IVM7_9dPIWfgJn;g[z8_R:3
+R3
+!s105 simple_core_tb_sv_unit
+S1
+R0
+w1453872462
+8simple_core_tb.sv
+Fsimple_core_tb.sv
+R7
+R8
+r1
+!s85 0
+31
+!s108 1453877005.683000
+!s107 simple_core_tb.sv|
+!s90 -reportprogress|300|-work|work|simple_core_tb.sv|
 !i113 1
 R12
 Xsimple_definitions
 R1
-!s110 1453791655
+R20
 !i10b 1
 !s100 a4@T2zgYg9iJZBc<H>5;]2
 IG;MBkMhkLS@Z2>aHz@1Hg0
@@ -119,7 +142,7 @@ R8
 r1
 !s85 0
 31
-!s108 1453791655.250000
+!s108 1453877005.473000
 !s107 ../simple_definitions.sv|
 !s90 -reportprogress|300|-work|work|../simple_definitions.sv|
 !i113 1
@@ -139,13 +162,13 @@ IeKe0CX1VHOUlaGYMLCU>D1
 S1
 R0
 R4
-Z19 8../simple_imem.sv
-Z20 F../simple_imem.sv
+Z21 8../simple_imem.sv
+Z22 F../simple_imem.sv
 R7
 R8
-Z21 !s108 1453791655.368000
-Z22 !s107 ../simple_imem.sv|
-Z23 !s90 -reportprogress|300|-work|work|../simple_imem.sv|
+Z23 !s108 1453877005.603000
+Z24 !s107 ../simple_imem.sv|
+Z25 !s90 -reportprogress|300|-work|work|../simple_imem.sv|
 !i113 1
 R12
 Xsimple_imem_sv_unit
@@ -162,13 +185,13 @@ IQHH_PN;J<m=WCfXI78ln`0
 S1
 R0
 R4
-R19
-R20
-R13
-R8
 R21
 R22
+R13
+R8
 R23
+R24
+R25
 !i113 1
 R12
 vsimple_reg_file
@@ -186,13 +209,13 @@ I4VLkXckUDd_@A=l_70AE^0
 S1
 R0
 R4
-Z24 8../simple_reg_file.sv
-Z25 F../simple_reg_file.sv
+Z26 8../simple_reg_file.sv
+Z27 F../simple_reg_file.sv
 R7
 R8
-Z26 !s108 1453791655.408000
-Z27 !s107 ../simple_reg_file.sv|
-Z28 !s90 -reportprogress|300|-work|work|../simple_reg_file.sv|
+Z28 !s108 1453877005.643000
+Z29 !s107 ../simple_reg_file.sv|
+Z30 !s90 -reportprogress|300|-work|work|../simple_reg_file.sv|
 !i113 1
 R12
 Xsimple_reg_file_sv_unit
@@ -209,12 +232,12 @@ IFYbE`7zX2`<1hX_U9@n0]3
 S1
 R0
 R4
-R24
-R25
-R13
-R8
 R26
 R27
+R13
+R8
 R28
+R29
+R30
 !i113 1
 R12
