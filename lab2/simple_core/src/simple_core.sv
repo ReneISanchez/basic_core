@@ -33,7 +33,8 @@ module simple_core (
 	 reg [31:0] regFile_to_ALU1;
 	 reg [31:0] regFile_to_ALU2;
 	 
-	 instruction_s inst_reg;
+	 instruction_s inst_regOne;
+	 instruction_s inst_regTwo;
 	 
     
     always_ff @(posedge clk)
@@ -49,10 +50,11 @@ module simple_core (
             pc <= pc + 1;
         end
 		  
-		  regFile_to_ALU1 = rs_val;
-		  regFile_to_ALU2 = rd_val;
+		  regFile_to_ALU1 <= rs_val;
+		  regFile_to_ALU2 <= rd_val;
 		  
-		  inst_reg = instruction;
+		  inst_regOne <= instruction;
+		  inst_regTwo <= inst_regOne;
     end // always_ff
     
     // Instruction memory
@@ -67,20 +69,20 @@ module simple_core (
     simple_reg_file rf (
         .clk(clk),
         //.rs_addr_i(instruction.rs),
-		  .rs_addr_i(inst_reg.rs),
+		  .rs_addr_i(inst_regOne.rs),
         //.rd_addr_i(instruction.rd),
-		  .rd_addr_i(inst_reg.rd),
+		  .rd_addr_i(inst_regOne.rd),
         .rs_val_o(rs_val),
         .rd_val_o(rd_val)
     );
     
     // ALU
     simple_alu alu (
-        .rd_i(rd_val),
-		  //.rd_i(regFile_to_ALU1),
-        .rs_i(rs_val),
-		  //.rs_i(regFile_to_ALU2),
-        .op_i(inst_reg),
+        //.rd_i(rd_val),
+		  .rd_i(regFile_to_ALU2),
+        //.rs_i(rs_val),
+		  .rs_i(regFile_to_ALU1),
+        .op_i(inst_regTwo),
         .writes_rf_o(alu_result_valid),
         .result_o(alu_result),
         .stop_o(stop)
