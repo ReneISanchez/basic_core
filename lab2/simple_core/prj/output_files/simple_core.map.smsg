@@ -1,0 +1,1 @@
+Warning (10268): Verilog HDL information at simple_core.sv(44): always construct contains both blocking and non-blocking assignments
