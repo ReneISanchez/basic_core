@@ -18,7 +18,7 @@ package definitions;
     const logic [15:0]kSLTU  = 16'b01001_?????_??????;
     
     const logic [15:0]kMOV   = 16'b01010_?????_??????;
-	
+	 
 	 
     // 11
     // Synthesis hangs on ALU in Quartus, so we use
@@ -26,6 +26,7 @@ package definitions;
     // `define kBAR   16'b01100_10000_??????
     const logic [15:0]kBAR   = 16'b01100_100??_??????;
     const logic [15:0]kWAIT  = 16'b01100_00000_000000;
+	 const logic [15:0]kBXOR =  16'b01101_?????_??????;
     // 14
     // 15
     const logic [15:0]kBEQZ  = 16'b10000_?????_??????;
@@ -44,6 +45,8 @@ package definitions;
 	 
 	 	 //Barrel rotate left
 	 const logic [15:0]kROL =   16'b11101_?????_??????;
+
+	 //const logic [15:0]kNAND =  
     // 28
     // 29
     // 30
@@ -64,6 +67,7 @@ package definitions;
         MOV         = 5'h0A,
         RBR         = 5'h0B,
         WAIT        = 5'h0C,
+		  BXOR		  = 5'h0D,
         BEQZ        = 5'h10,
         BNEQZ       = 5'h11,
         BGTZ        = 5'h12,
@@ -73,7 +77,7 @@ package definitions;
         LBU         = 5'h19,
         SW          = 5'h1A,
         SB          = 5'h1B,
-        ROT         = 5'h1C,
+        //ROT         = 5'h1C,
         ROL         = 5'h1D,
         BARR,
         NOP

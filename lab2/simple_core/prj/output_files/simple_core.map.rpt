@@ -1,6 +1,6 @@
 Analysis & Synthesis report for simple_core
-Mon Jan 25 12:54:57 2016
-Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Full Version
+Wed Jan 27 00:58:47 2016
+Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
 
 
 ---------------------
@@ -21,7 +21,6 @@ Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Full Version
  13. Post-Synthesis Netlist Statistics for Top Partition
  14. Elapsed Time Per Partition
  15. Analysis & Synthesis Messages
- 16. Analysis & Synthesis Suppressed Messages
 
 
 
@@ -45,24 +44,24 @@ agreement for further details.
 
 
 
-+----------------------------------------------------------------------------------+
-; Analysis & Synthesis Summary                                                     ;
-+------------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Mon Jan 25 12:54:57 2016       ;
-; Quartus II 64-Bit Version          ; 15.0.0 Build 145 04/22/2015 SJ Full Version ;
-; Revision Name                      ; simple_core                                 ;
-; Top-level Entity Name              ; simple_core                                 ;
-; Family                             ; Cyclone IV E                                ;
-; Total logic elements               ; 61                                          ;
-;     Total combinational functions  ; 29                                          ;
-;     Dedicated logic registers      ; 49                                          ;
-; Total registers                    ; 49                                          ;
-; Total pins                         ; 36                                          ;
-; Total virtual pins                 ; 0                                           ;
-; Total memory bits                  ; 0                                           ;
-; Embedded Multiplier 9-bit elements ; 0                                           ;
-; Total PLLs                         ; 0                                           ;
-+------------------------------------+---------------------------------------------+
++---------------------------------------------------------------------------------+
+; Analysis & Synthesis Summary                                                    ;
++------------------------------------+--------------------------------------------+
+; Analysis & Synthesis Status        ; Successful - Wed Jan 27 00:58:47 2016      ;
+; Quartus II 64-Bit Version          ; 15.0.0 Build 145 04/22/2015 SJ Web Edition ;
+; Revision Name                      ; simple_core                                ;
+; Top-level Entity Name              ; simple_core                                ;
+; Family                             ; Cyclone IV E                               ;
+; Total logic elements               ; 63                                         ;
+;     Total combinational functions  ; 29                                         ;
+;     Dedicated logic registers      ; 53                                         ;
+; Total registers                    ; 53                                         ;
+; Total pins                         ; 36                                         ;
+; Total virtual pins                 ; 0                                          ;
+; Total memory bits                  ; 0                                          ;
+; Embedded Multiplier 9-bit elements ; 0                                          ;
+; Total PLLs                         ; 0                                          ;
++------------------------------------+--------------------------------------------+
 
 
 +----------------------------------------------------------------------------------------------------------------------+
@@ -157,29 +156,29 @@ agreement for further details.
 +----------------------------+-------------+
 ; Processors                 ; Number      ;
 +----------------------------+-------------+
-; Number detected on machine ; 8           ;
-; Maximum allowed            ; 4           ;
+; Number detected on machine ; 4           ;
+; Maximum allowed            ; 2           ;
 ;                            ;             ;
 ; Average used               ; 1.00        ;
 ; Maximum used               ; 1           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processors 2-8         ;   0.0%      ;
+;     Processors 2-4         ;   0.0%      ;
 +----------------------------+-------------+
 
 
-+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Source Files Read                                                                                                                                                           ;
-+----------------------------------+-----------------+------------------------------+----------------------------------------------------------------------------------------------------+---------+
-; File Name with User-Entered Path ; Used in Netlist ; File Type                    ; File Name with Absolute Path                                                                       ; Library ;
-+----------------------------------+-----------------+------------------------------+----------------------------------------------------------------------------------------------------+---------+
-; ../src/simple_core.sv            ; yes             ; User SystemVerilog HDL File  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/lab2/simple_core/src/simple_core.sv        ;         ;
-; ../src/simple_reg_file.sv        ; yes             ; User SystemVerilog HDL File  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/lab2/simple_core/src/simple_reg_file.sv    ;         ;
-; ../src/simple_imem.sv            ; yes             ; User SystemVerilog HDL File  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/lab2/simple_core/src/simple_imem.sv        ;         ;
-; ../src/simple_definitions.sv     ; yes             ; User SystemVerilog HDL File  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/lab2/simple_core/src/simple_definitions.sv ;         ;
-; ../src/simple_alu.sv             ; yes             ; User SystemVerilog HDL File  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/lab2/simple_core/src/simple_alu.sv         ;         ;
-+----------------------------------+-----------------+------------------------------+----------------------------------------------------------------------------------------------------+---------+
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                                                              ;
++----------------------------------+-----------------+------------------------------+---------------------------------------------------------------------------------------+---------+
+; File Name with User-Entered Path ; Used in Netlist ; File Type                    ; File Name with Absolute Path                                                          ; Library ;
++----------------------------------+-----------------+------------------------------+---------------------------------------------------------------------------------------+---------+
+; ../src/simple_core.sv            ; yes             ; User SystemVerilog HDL File  ; C:/Users/Shawn/Downloads/basic_core-master/lab2/simple_core/src/simple_core.sv        ;         ;
+; ../src/simple_reg_file.sv        ; yes             ; User SystemVerilog HDL File  ; C:/Users/Shawn/Downloads/basic_core-master/lab2/simple_core/src/simple_reg_file.sv    ;         ;
+; ../src/simple_imem.sv            ; yes             ; User SystemVerilog HDL File  ; C:/Users/Shawn/Downloads/basic_core-master/lab2/simple_core/src/simple_imem.sv        ;         ;
+; ../src/simple_definitions.sv     ; yes             ; User SystemVerilog HDL File  ; C:/Users/Shawn/Downloads/basic_core-master/lab2/simple_core/src/simple_definitions.sv ;         ;
+; ../src/simple_alu.sv             ; yes             ; User SystemVerilog HDL File  ; C:/Users/Shawn/Downloads/basic_core-master/lab2/simple_core/src/simple_alu.sv         ;         ;
++----------------------------------+-----------------+------------------------------+---------------------------------------------------------------------------------------+---------+
 
 
 +---------------------------------------------------------+
@@ -187,20 +186,20 @@ agreement for further details.
 +---------------------------------------------+-----------+
 ; Resource                                    ; Usage     ;
 +---------------------------------------------+-----------+
-; Estimated Total logic elements              ; 61        ;
+; Estimated Total logic elements              ; 63        ;
 ;                                             ;           ;
 ; Total combinational functions               ; 29        ;
 ; Logic element usage by number of LUT inputs ;           ;
-;     -- 4 input functions                    ; 5         ;
+;     -- 4 input functions                    ; 3         ;
 ;     -- 3 input functions                    ; 21        ;
-;     -- <=2 input functions                  ; 3         ;
+;     -- <=2 input functions                  ; 5         ;
 ;                                             ;           ;
 ; Logic elements by mode                      ;           ;
 ;     -- normal mode                          ; 23        ;
 ;     -- arithmetic mode                      ; 6         ;
 ;                                             ;           ;
-; Total registers                             ; 49        ;
-;     -- Dedicated logic registers            ; 49        ;
+; Total registers                             ; 53        ;
+;     -- Dedicated logic registers            ; 53        ;
 ;     -- I/O registers                        ; 0         ;
 ;                                             ;           ;
 ; I/O pins                                    ; 36        ;
@@ -208,9 +207,9 @@ agreement for further details.
 ; Embedded Multiplier 9-bit elements          ; 0         ;
 ;                                             ;           ;
 ; Maximum fan-out node                        ; clk~input ;
-; Maximum fan-out                             ; 49        ;
-; Total fan-out                               ; 291       ;
-; Average fan-out                             ; 1.94      ;
+; Maximum fan-out                             ; 53        ;
+; Total fan-out                               ; 295       ;
+; Average fan-out                             ; 1.92      ;
 +---------------------------------------------+-----------+
 
 
@@ -219,8 +218,8 @@ agreement for further details.
 +----------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+-------------------------------+--------------+
 ; Compilation Hierarchy Node ; LC Combinationals ; LC Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name           ; Library Name ;
 +----------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+-------------------------------+--------------+
-; |simple_core               ; 29 (4)            ; 49 (49)      ; 0           ; 0            ; 0       ; 0         ; 36   ; 0            ; |simple_core                  ; work         ;
-;    |simple_alu:alu|        ; 17 (17)           ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |simple_core|simple_alu:alu   ; work         ;
+; |simple_core               ; 29 (3)            ; 53 (53)      ; 0           ; 0            ; 0       ; 0         ; 36   ; 0            ; |simple_core                  ; work         ;
+;    |simple_alu:alu|        ; 18 (18)           ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |simple_core|simple_alu:alu   ; work         ;
 ;    |simple_imem:imem|      ; 8 (8)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |simple_core|simple_imem:imem ; work         ;
 +----------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+-------------------------------+--------------+
 Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
@@ -231,8 +230,8 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +-----------------------------------------+----------------------------------------+
 ; Register name                           ; Reason for Removal                     ;
 +-----------------------------------------+----------------------------------------+
-; inst_to_regFile2[1]                     ; Stuck at GND due to stuck port data_in ;
-; inst_to_regFile1[2]                     ; Stuck at GND due to stuck port data_in ;
+; inst_regOne.rs[2]                       ; Stuck at GND due to stuck port data_in ;
+; inst_regOne.rd[1]                       ; Stuck at GND due to stuck port data_in ;
 ; simple_reg_file:rf|RF~0                 ; Stuck at GND due to stuck port clock   ;
 ; simple_reg_file:rf|RF~1                 ; Stuck at GND due to stuck port clock   ;
 ; simple_reg_file:rf|RF~2                 ; Stuck at GND due to stuck port clock   ;
@@ -745,10 +744,10 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; simple_reg_file:rf|RF~509               ; Stuck at GND due to stuck port clock   ;
 ; simple_reg_file:rf|RF~510               ; Stuck at GND due to stuck port clock   ;
 ; simple_reg_file:rf|RF~511               ; Stuck at GND due to stuck port clock   ;
-; regFile_to_ALU2[1,4..30]                ; Stuck at GND due to stuck port data_in ;
 ; regFile_to_ALU1[2,4..30]                ; Stuck at GND due to stuck port data_in ;
-; regFile_to_ALU2[31]                     ; Stuck at GND due to stuck port data_in ;
+; regFile_to_ALU2[1,4..30]                ; Stuck at GND due to stuck port data_in ;
 ; regFile_to_ALU1[31]                     ; Stuck at GND due to stuck port data_in ;
+; regFile_to_ALU2[31]                     ; Stuck at GND due to stuck port data_in ;
 ; Total Number of Removed Registers = 572 ;                                        ;
 +-----------------------------------------+----------------------------------------+
 
@@ -758,7 +757,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +--------------------------+---------------------------+---------------------------------------------------------------------------------+
 ; Register name            ; Reason for Removal        ; Registers Removed due to This Register                                          ;
 +--------------------------+---------------------------+---------------------------------------------------------------------------------+
-; inst_to_regFile2[1]      ; Stuck at GND              ; regFile_to_ALU1[2], regFile_to_ALU1[4], regFile_to_ALU1[5], regFile_to_ALU1[6], ;
+; inst_regOne.rs[2]        ; Stuck at GND              ; regFile_to_ALU1[2], regFile_to_ALU1[4], regFile_to_ALU1[5], regFile_to_ALU1[6], ;
 ;                          ; due to stuck port data_in ; regFile_to_ALU1[7], regFile_to_ALU1[8]                                          ;
 ; simple_reg_file:rf|RF~1  ; Stuck at GND              ; regFile_to_ALU2[1]                                                              ;
 ;                          ; due to stuck port clock   ;                                                                                 ;
@@ -826,7 +825,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 49    ;
+; Total registers                              ; 53    ;
 ; Number of registers using Synchronous Clear  ; 0     ;
 ; Number of registers using Synchronous Load   ; 0     ;
 ; Number of registers using Asynchronous Clear ; 0     ;
@@ -861,19 +860,19 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; Type                  ; Count                       ;
 +-----------------------+-----------------------------+
 ; boundary_port         ; 36                          ;
-; cycloneiii_ff         ; 49                          ;
+; cycloneiii_ff         ; 53                          ;
 ;     ENA               ; 34                          ;
-;     plain             ; 15                          ;
+;     plain             ; 19                          ;
 ; cycloneiii_lcell_comb ; 29                          ;
 ;     arith             ; 6                           ;
 ;         3 data inputs ; 6                           ;
 ;     normal            ; 23                          ;
-;         2 data inputs ; 3                           ;
+;         2 data inputs ; 5                           ;
 ;         3 data inputs ; 15                          ;
-;         4 data inputs ; 5                           ;
+;         4 data inputs ; 3                           ;
 ;                       ;                             ;
-; Max LUT depth         ; 3.60                        ;
-; Average LUT depth     ; 1.39                        ;
+; Max LUT depth         ; 3.50                        ;
+; Average LUT depth     ; 1.23                        ;
 +-----------------------+-----------------------------+
 
 
@@ -891,24 +890,24 @@ Note: In order to hide this table in the UI and the text report file, please set
 +-------------------------------+
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Analysis & Synthesis
-    Info: Version 15.0.0 Build 145 04/22/2015 SJ Full Version
-    Info: Processing started: Mon Jan 25 12:54:46 2016
+    Info: Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
+    Info: Processing started: Wed Jan 27 00:58:34 2016
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off simple_core -c simple_core
-Info (11104): Parallel Compilation has detected 8 hyper-threaded processors. However, the extra hyper-threaded processors will not be used by default. Parallel Compilation will use 4 of the 4 physical processors detected instead.
-Info (12021): Found 1 design units, including 1 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/lab2/simple_core/src/simple_core.sv
+Info (11104): Parallel Compilation has detected 4 hyper-threaded processors. However, the extra hyper-threaded processors will not be used by default. Parallel Compilation will use 2 of the 2 physical processors detected instead.
+Info (12021): Found 1 design units, including 1 entities, in source file /users/shawn/downloads/basic_core-master/lab2/simple_core/src/simple_core.sv
     Info (12023): Found entity 1: simple_core
-Info (12021): Found 1 design units, including 1 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/lab2/simple_core/src/simple_reg_file.sv
+Info (12021): Found 1 design units, including 1 entities, in source file /users/shawn/downloads/basic_core-master/lab2/simple_core/src/simple_reg_file.sv
     Info (12023): Found entity 1: simple_reg_file
-Info (12021): Found 1 design units, including 1 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/lab2/simple_core/src/simple_imem.sv
+Info (12021): Found 1 design units, including 1 entities, in source file /users/shawn/downloads/basic_core-master/lab2/simple_core/src/simple_imem.sv
     Info (12023): Found entity 1: simple_imem
-Info (12021): Found 1 design units, including 0 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/lab2/simple_core/src/simple_definitions.sv
+Info (12021): Found 1 design units, including 0 entities, in source file /users/shawn/downloads/basic_core-master/lab2/simple_core/src/simple_definitions.sv
     Info (12022): Found design unit 1: simple_definitions (SystemVerilog)
-Info (12021): Found 1 design units, including 1 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/lab2/simple_core/src/simple_alu.sv
+Info (12021): Found 1 design units, including 1 entities, in source file /users/shawn/downloads/basic_core-master/lab2/simple_core/src/simple_alu.sv
     Info (12023): Found entity 1: simple_alu
-Warning (10236): Verilog HDL Implicit Net warning at simple_core.sv(90): created implicit net for "alu_result_valid"
+Warning (10236): Verilog HDL Implicit Net warning at simple_core.sv(86): created implicit net for "alu_result_valid"
 Info (12127): Elaborating entity "simple_core" for the top level hierarchy
 Warning (10036): Verilog HDL or VHDL warning at simple_core.sv(27): object "rf_wen" assigned a value but never read
-Warning (10230): Verilog HDL assignment warning at simple_core.sv(54): truncated value with size 32 to match size of target (3)
+Warning (10230): Verilog HDL assignment warning at simple_core.sv(50): truncated value with size 32 to match size of target (3)
 Info (12128): Elaborating entity "simple_imem" for hierarchy "simple_imem:imem"
 Info (12128): Elaborating entity "simple_reg_file" for hierarchy "simple_reg_file:rf"
 Warning (10030): Net "RF.data_a" at simple_reg_file.sv(26) has no driver or initial value, using a default initial value '0'
@@ -918,23 +917,16 @@ Info (12128): Elaborating entity "simple_alu" for hierarchy "simple_alu:alu"
 Info (276014): Found 1 instances of uninferred RAM logic
     Info (276004): RAM logic "simple_reg_file:rf|RF" is uninferred due to inappropriate RAM size
 Info (286030): Timing-Driven Synthesis is running
-Info (144001): Generated suppressed messages file C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/lab2/simple_core/prj/output_files/simple_core.map.smsg
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
-Info (21057): Implemented 98 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 100 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 2 input pins
     Info (21059): Implemented 34 output pins
-    Info (21061): Implemented 62 logic cells
+    Info (21061): Implemented 64 logic cells
 Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 6 warnings
-    Info: Peak virtual memory: 694 megabytes
-    Info: Processing ended: Mon Jan 25 12:54:57 2016
-    Info: Elapsed time: 00:00:11
-    Info: Total CPU time (on all processors): 00:00:19
-
-
-+------------------------------------------+
-; Analysis & Synthesis Suppressed Messages ;
-+------------------------------------------+
-The suppressed messages can be found in C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/lab2/simple_core/prj/output_files/simple_core.map.smsg.
+    Info: Peak virtual memory: 668 megabytes
+    Info: Processing ended: Wed Jan 27 00:58:47 2016
+    Info: Elapsed time: 00:00:13
+    Info: Total CPU time (on all processors): 00:00:31
 
 

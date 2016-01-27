@@ -36,6 +36,7 @@ module alu (
             
             //bitwise barrel rotate left
             kROL:   result_o   = ((rd_i) << rs_i[4:0]) | ( (rd_i) >> ~rs_i);
+				kBXOR:   result_o   = rd_i ^ rs_i; 
             
             kMOV, kLW, kLBU, kJALR, kBAR:  
                 begin

@@ -31,7 +31,7 @@ module cl_decode (
         unique casez (instruction_i)
             kADDU, kSUBU, kSLLV, kSRAV, kSRLV,
             kAND,  kOR,   kNOR,  kSLT,  kSLTU, 
-            kMOV, kROL,  kJALR, kLW,   kLBU:
+            kMOV, kROL,  kBXOR, kJALR, kLW,   kLBU:
             op_writes_rf_o = 1'b1; 
             
             default:

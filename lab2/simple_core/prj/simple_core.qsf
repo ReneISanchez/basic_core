@@ -42,7 +42,7 @@ set_global_assignment -name DEVICE EP4CE40F29C6
 set_global_assignment -name TOP_LEVEL_ENTITY simple_core
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 15.0.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "11:38:40  JANUARY 25, 2016"
-set_global_assignment -name LAST_QUARTUS_VERSION "15.0.0 SP0.01WE"
+set_global_assignment -name LAST_QUARTUS_VERSION 15.0.0
 set_global_assignment -name SYSTEMVERILOG_FILE ../src/simple_core.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../src/simple_reg_file.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../src/simple_imem.sv

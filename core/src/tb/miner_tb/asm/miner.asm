@@ -217,7 +217,8 @@ W_LOOP0:
 
     MOV  $R29, %H_BASE
     SW   $R29, $R1
-    ADDU $R29, %FOUR
+    //ADDU $R29, %FOUR
+	SLLV $R29, 
     SW   $R29, $R2
     ADDU $R29, %FOUR
     SW   $R29, $R3
@@ -504,7 +505,8 @@ CH:
     AND  $R5, $R3  // ~X and Z
     MOV  $R7, $R1
     MOV  $R8, $R5
-    JALR $R31, %XOR 
+    JALR $R31, %XOR
+	//BXOR $R7, $R8 
     MOV  $R4, $R9
     JALR $R31, $R30
 

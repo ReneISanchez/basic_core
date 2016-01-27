@@ -1,6 +1,6 @@
 Analysis & Synthesis report for core_flattened
-Mon Jan 25 10:49:27 2016
-Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Full Version
+Wed Jan 27 10:11:49 2016
+Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
 
 
 ---------------------
@@ -50,24 +50,24 @@ agreement for further details.
 
 
 
-+----------------------------------------------------------------------------------+
-; Analysis & Synthesis Summary                                                     ;
-+------------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Mon Jan 25 10:49:26 2016       ;
-; Quartus II 64-Bit Version          ; 15.0.0 Build 145 04/22/2015 SJ Full Version ;
-; Revision Name                      ; core_flattened                              ;
-; Top-level Entity Name              ; core_flattened                              ;
-; Family                             ; Cyclone IV E                                ;
-; Total logic elements               ; 6,101                                       ;
-;     Total combinational functions  ; 4,085                                       ;
-;     Dedicated logic registers      ; 2,069                                       ;
-; Total registers                    ; 2069                                        ;
-; Total pins                         ; 272                                         ;
-; Total virtual pins                 ; 0                                           ;
-; Total memory bits                  ; 16,384                                      ;
-; Embedded Multiplier 9-bit elements ; 0                                           ;
-; Total PLLs                         ; 0                                           ;
-+------------------------------------+---------------------------------------------+
++---------------------------------------------------------------------------------+
+; Analysis & Synthesis Summary                                                    ;
++------------------------------------+--------------------------------------------+
+; Analysis & Synthesis Status        ; Successful - Wed Jan 27 10:11:49 2016      ;
+; Quartus II 64-Bit Version          ; 15.0.0 Build 145 04/22/2015 SJ Web Edition ;
+; Revision Name                      ; core_flattened                             ;
+; Top-level Entity Name              ; core_flattened                             ;
+; Family                             ; Cyclone IV E                               ;
+; Total logic elements               ; 6,064                                      ;
+;     Total combinational functions  ; 4,048                                      ;
+;     Dedicated logic registers      ; 2,069                                      ;
+; Total registers                    ; 2069                                       ;
+; Total pins                         ; 272                                        ;
+; Total virtual pins                 ; 0                                          ;
+; Total memory bits                  ; 16,384                                     ;
+; Embedded Multiplier 9-bit elements ; 0                                          ;
+; Total PLLs                         ; 0                                          ;
++------------------------------------+--------------------------------------------+
 
 
 +----------------------------------------------------------------------------------------------------------------------+
@@ -162,43 +162,43 @@ agreement for further details.
 +----------------------------+-------------+
 ; Processors                 ; Number      ;
 +----------------------------+-------------+
-; Number detected on machine ; 8           ;
-; Maximum allowed            ; 4           ;
+; Number detected on machine ; 4           ;
+; Maximum allowed            ; 2           ;
 ;                            ;             ;
 ; Average used               ; 1.00        ;
-; Maximum used               ; 4           ;
+; Maximum used               ; 2           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processors 2-4         ; < 0.1%      ;
-;     Processors 5-8         ;   0.0%      ;
+;     Processor 2            ; < 0.1%      ;
+;     Processors 3-4         ;   0.0%      ;
 +----------------------------+-------------+
 
 
-+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Source Files Read                                                                                                                                                ;
-+----------------------------------+-----------------+------------------------------+-----------------------------------------------------------------------------------------+---------+
-; File Name with User-Entered Path ; Used in Netlist ; File Type                    ; File Name with Absolute Path                                                            ; Library ;
-+----------------------------------+-----------------+------------------------------+-----------------------------------------------------------------------------------------+---------+
-; ../src/core_flattened.sv         ; yes             ; User SystemVerilog HDL File  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/core_flattened.sv      ;         ;
-; ../src/cl_state_machine.sv       ; yes             ; User SystemVerilog HDL File  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/cl_state_machine.sv    ;         ;
-; ../src/instr_mem.sv              ; yes             ; User SystemVerilog HDL File  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/instr_mem.sv           ;         ;
-; ../src/definitions.sv            ; yes             ; User SystemVerilog HDL File  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/definitions.sv         ;         ;
-; ../src/core.sv                   ; yes             ; User SystemVerilog HDL File  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/core.sv                ;         ;
-; ../src/cl_decode.sv              ; yes             ; User SystemVerilog HDL File  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/cl_decode.sv           ;         ;
-; ../src/alu.sv                    ; yes             ; User SystemVerilog HDL File  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/alu.sv                 ;         ;
-; ../src/reg_file.sv               ; yes             ; User SystemVerilog HDL File  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/reg_file.sv            ;         ;
-; altsyncram.tdf                   ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/altsyncram.tdf                           ;         ;
-; stratix_ram_block.inc            ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/stratix_ram_block.inc                    ;         ;
-; lpm_mux.inc                      ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/lpm_mux.inc                              ;         ;
-; lpm_decode.inc                   ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/lpm_decode.inc                           ;         ;
-; aglobal150.inc                   ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/aglobal150.inc                           ;         ;
-; a_rdenreg.inc                    ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/a_rdenreg.inc                            ;         ;
-; altrom.inc                       ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/altrom.inc                               ;         ;
-; altram.inc                       ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/altram.inc                               ;         ;
-; altdpram.inc                     ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/altdpram.inc                             ;         ;
-; db/altsyncram_gg81.tdf           ; yes             ; Auto-Generated Megafunction  ; C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/core/prj/db/altsyncram_gg81.tdf ;         ;
-+----------------------------------+-----------------+------------------------------+-----------------------------------------------------------------------------------------+---------+
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                                                   ;
++----------------------------------+-----------------+------------------------------+----------------------------------------------------------------------------+---------+
+; File Name with User-Entered Path ; Used in Netlist ; File Type                    ; File Name with Absolute Path                                               ; Library ;
++----------------------------------+-----------------+------------------------------+----------------------------------------------------------------------------+---------+
+; ../src/core_flattened.sv         ; yes             ; User SystemVerilog HDL File  ; C:/Users/Shawn/Downloads/basic_core-master/core/src/core_flattened.sv      ;         ;
+; ../src/cl_state_machine.sv       ; yes             ; User SystemVerilog HDL File  ; C:/Users/Shawn/Downloads/basic_core-master/core/src/cl_state_machine.sv    ;         ;
+; ../src/instr_mem.sv              ; yes             ; User SystemVerilog HDL File  ; C:/Users/Shawn/Downloads/basic_core-master/core/src/instr_mem.sv           ;         ;
+; ../src/definitions.sv            ; yes             ; User SystemVerilog HDL File  ; C:/Users/Shawn/Downloads/basic_core-master/core/src/definitions.sv         ;         ;
+; ../src/core.sv                   ; yes             ; User SystemVerilog HDL File  ; C:/Users/Shawn/Downloads/basic_core-master/core/src/core.sv                ;         ;
+; ../src/cl_decode.sv              ; yes             ; User SystemVerilog HDL File  ; C:/Users/Shawn/Downloads/basic_core-master/core/src/cl_decode.sv           ;         ;
+; ../src/alu.sv                    ; yes             ; User SystemVerilog HDL File  ; C:/Users/Shawn/Downloads/basic_core-master/core/src/alu.sv                 ;         ;
+; ../src/reg_file.sv               ; yes             ; User SystemVerilog HDL File  ; C:/Users/Shawn/Downloads/basic_core-master/core/src/reg_file.sv            ;         ;
+; altsyncram.tdf                   ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/altsyncram.tdf              ;         ;
+; stratix_ram_block.inc            ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/stratix_ram_block.inc       ;         ;
+; lpm_mux.inc                      ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/lpm_mux.inc                 ;         ;
+; lpm_decode.inc                   ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/lpm_decode.inc              ;         ;
+; aglobal150.inc                   ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/aglobal150.inc              ;         ;
+; a_rdenreg.inc                    ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/a_rdenreg.inc               ;         ;
+; altrom.inc                       ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/altrom.inc                  ;         ;
+; altram.inc                       ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/altram.inc                  ;         ;
+; altdpram.inc                     ; yes             ; Megafunction                 ; c:/altera/15.0/quartus/libraries/megafunctions/altdpram.inc                ;         ;
+; db/altsyncram_gg81.tdf           ; yes             ; Auto-Generated Megafunction  ; C:/Users/Shawn/Downloads/basic_core-master/core/prj/db/altsyncram_gg81.tdf ;         ;
++----------------------------------+-----------------+------------------------------+----------------------------------------------------------------------------+---------+
 
 
 +---------------------------------------------------------+
@@ -206,16 +206,16 @@ agreement for further details.
 +---------------------------------------------+-----------+
 ; Resource                                    ; Usage     ;
 +---------------------------------------------+-----------+
-; Estimated Total logic elements              ; 6,101     ;
+; Estimated Total logic elements              ; 6,064     ;
 ;                                             ;           ;
-; Total combinational functions               ; 4085      ;
+; Total combinational functions               ; 4048      ;
 ; Logic element usage by number of LUT inputs ;           ;
-;     -- 4 input functions                    ; 3547      ;
-;     -- 3 input functions                    ; 453       ;
-;     -- <=2 input functions                  ; 85        ;
+;     -- 4 input functions                    ; 3482      ;
+;     -- 3 input functions                    ; 465       ;
+;     -- <=2 input functions                  ; 101       ;
 ;                                             ;           ;
 ; Logic elements by mode                      ;           ;
-;     -- normal mode                          ; 3943      ;
+;     -- normal mode                          ; 3906      ;
 ;     -- arithmetic mode                      ; 142       ;
 ;                                             ;           ;
 ; Total registers                             ; 2069      ;
@@ -229,8 +229,8 @@ agreement for further details.
 ;                                             ;           ;
 ; Maximum fan-out node                        ; clk~input ;
 ; Maximum fan-out                             ; 2085      ;
-; Total fan-out                               ; 22565     ;
-; Average fan-out                             ; 3.36      ;
+; Total fan-out                               ; 22373     ;
+; Average fan-out                             ; 3.35      ;
 +---------------------------------------------+-----------+
 
 
@@ -239,11 +239,11 @@ agreement for further details.
 +----------------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+---------------------------------------------------------------------------------------------------------+--------------+
 ; Compilation Hierarchy Node                   ; LC Combinationals ; LC Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                                                                     ; Library Name ;
 +----------------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+---------------------------------------------------------------------------------------------------------+--------------+
-; |core_flattened                              ; 4085 (0)          ; 2069 (0)     ; 16384       ; 0            ; 0       ; 0         ; 272  ; 0            ; |core_flattened                                                                                         ; work         ;
-;    |core:core1|                              ; 4085 (258)        ; 2069 (21)    ; 16384       ; 0            ; 0       ; 0         ; 0    ; 0            ; |core_flattened|core:core1                                                                              ; work         ;
-;       |alu:alu_1|                            ; 1047 (1047)       ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |core_flattened|core:core1|alu:alu_1                                                                    ; work         ;
-;       |cl_decode:decode|                     ; 7 (7)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |core_flattened|core:core1|cl_decode:decode                                                             ; work         ;
-;       |cl_state_machine:state_machine|       ; 4 (4)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |core_flattened|core:core1|cl_state_machine:state_machine                                               ; work         ;
+; |core_flattened                              ; 4048 (0)          ; 2069 (0)     ; 16384       ; 0            ; 0       ; 0         ; 272  ; 0            ; |core_flattened                                                                                         ; work         ;
+;    |core:core1|                              ; 4048 (255)        ; 2069 (21)    ; 16384       ; 0            ; 0       ; 0         ; 0    ; 0            ; |core_flattened|core:core1                                                                              ; work         ;
+;       |alu:alu_1|                            ; 1013 (1013)       ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |core_flattened|core:core1|alu:alu_1                                                                    ; work         ;
+;       |cl_decode:decode|                     ; 5 (5)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |core_flattened|core:core1|cl_decode:decode                                                             ; work         ;
+;       |cl_state_machine:state_machine|       ; 6 (6)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |core_flattened|core:core1|cl_state_machine:state_machine                                               ; work         ;
 ;       |instr_mem:imem|                       ; 0 (0)             ; 0 (0)        ; 16384       ; 0            ; 0       ; 0         ; 0    ; 0            ; |core_flattened|core:core1|instr_mem:imem                                                               ; work         ;
 ;          |altsyncram:mem[0].opcode[4]__1|    ; 0 (0)             ; 0 (0)        ; 16384       ; 0            ; 0       ; 0         ; 0    ; 0            ; |core_flattened|core:core1|instr_mem:imem|altsyncram:mem[0].opcode[4]__1                                ; work         ;
 ;             |altsyncram_gg81:auto_generated| ; 0 (0)             ; 0 (0)        ; 16384       ; 0            ; 0       ; 0         ; 0    ; 0            ; |core_flattened|core:core1|instr_mem:imem|altsyncram:mem[0].opcode[4]__1|altsyncram_gg81:auto_generated ; work         ;
@@ -292,25 +292,18 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +--------------------+-----------+---------------+----------------------+------------------------+------------+--------------------------------------------------+
 ; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                       ;
 +--------------------+-----------+---------------+----------------------+------------------------+------------+--------------------------------------------------+
-; 3:1                ; 3 bits    ; 6 LEs         ; 3 LEs                ; 3 LEs                  ; Yes        ; |core_flattened|core:core1|barrier_mask_r[1]     ;
+; 3:1                ; 3 bits    ; 6 LEs         ; 3 LEs                ; 3 LEs                  ; Yes        ; |core_flattened|core:core1|barrier_mask_r[0]     ;
 ; 4:1                ; 3 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; Yes        ; |core_flattened|core:core1|barrier_r[0]          ;
-; 3:1                ; 8 bits    ; 16 LEs        ; 16 LEs               ; 0 LEs                  ; No         ; |core_flattened|core:core1|alu:alu_1|ShiftLeft0  ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; No         ; |core_flattened|core:core1|alu:alu_1|ShiftRight2 ;
-; 4:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; No         ; |core_flattened|core:core1|mem_stage_n[0]        ;
-; 4:1                ; 4 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; No         ; |core_flattened|core:core1|alu:alu_1|ShiftLeft0  ;
-; 4:1                ; 8 bits    ; 16 LEs        ; 16 LEs               ; 0 LEs                  ; No         ; |core_flattened|core:core1|alu:alu_1|ShiftRight2 ;
-; 4:1                ; 22 bits   ; 44 LEs        ; 44 LEs               ; 0 LEs                  ; No         ; |core_flattened|core:core1|rf_wd[18]             ;
-; 4:1                ; 10 bits   ; 20 LEs        ; 20 LEs               ; 0 LEs                  ; No         ; |core_flattened|core:core1|rf_wd[1]              ;
-; 5:1                ; 2 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; No         ; |core_flattened|core:core1|alu:alu_1|ShiftLeft0  ;
-; 5:1                ; 4 bits    ; 12 LEs        ; 12 LEs               ; 0 LEs                  ; No         ; |core_flattened|core:core1|alu:alu_1|ShiftRight2 ;
-; 6:1                ; 2 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; No         ; |core_flattened|core:core1|alu:alu_1|ShiftLeft0  ;
-; 6:1                ; 2 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; No         ; |core_flattened|core:core1|alu:alu_1|ShiftRight2 ;
-; 7:1                ; 2 bits    ; 8 LEs         ; 8 LEs                ; 0 LEs                  ; No         ; |core_flattened|core:core1|alu:alu_1|ShiftRight2 ;
-; 6:1                ; 10 bits   ; 40 LEs        ; 30 LEs               ; 10 LEs                 ; No         ; |core_flattened|core:core1|PC_n[8]               ;
-; 244:1              ; 14 bits   ; 2268 LEs      ; 112 LEs              ; 2156 LEs               ; No         ; |core_flattened|core:core1|alu:alu_1|Selector6   ;
-; 244:1              ; 8 bits    ; 1296 LEs      ; 72 LEs               ; 1224 LEs               ; No         ; |core_flattened|core:core1|alu:alu_1|Selector22  ;
+; 3:1                ; 15 bits   ; 30 LEs        ; 15 LEs               ; 15 LEs                 ; No         ; |core_flattened|core:core1|alu:alu_1|ShiftRight2 ;
+; 3:1                ; 15 bits   ; 30 LEs        ; 30 LEs               ; 0 LEs                  ; No         ; |core_flattened|core:core1|alu:alu_1|ShiftRight2 ;
+; 4:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; No         ; |core_flattened|core:core1|mem_stage_n[1]        ;
+; 4:1                ; 22 bits   ; 44 LEs        ; 44 LEs               ; 0 LEs                  ; No         ; |core_flattened|core:core1|rf_wd[31]             ;
+; 4:1                ; 10 bits   ; 20 LEs        ; 20 LEs               ; 0 LEs                  ; No         ; |core_flattened|core:core1|rf_wd[3]              ;
+; 6:1                ; 10 bits   ; 40 LEs        ; 30 LEs               ; 10 LEs                 ; No         ; |core_flattened|core:core1|PC_n[7]               ;
+; 244:1              ; 14 bits   ; 2268 LEs      ; 126 LEs              ; 2142 LEs               ; No         ; |core_flattened|core:core1|alu:alu_1|Selector14  ;
+; 244:1              ; 8 bits    ; 1296 LEs      ; 80 LEs               ; 1216 LEs               ; No         ; |core_flattened|core:core1|alu:alu_1|Selector20  ;
 ; 245:1              ; 4 bits    ; 652 LEs       ; 40 LEs               ; 612 LEs                ; No         ; |core_flattened|core:core1|alu:alu_1|Selector26  ;
-; 246:1              ; 2 bits    ; 328 LEs       ; 20 LEs               ; 308 LEs                ; No         ; |core_flattened|core:core1|alu:alu_1|Selector29  ;
+; 246:1              ; 2 bits    ; 328 LEs       ; 22 LEs               ; 306 LEs                ; No         ; |core_flattened|core:core1|alu:alu_1|Selector28  ;
 +--------------------+-----------+---------------+----------------------+------------------------+------------+--------------------------------------------------+
 
 
@@ -447,19 +440,19 @@ Note: In order to hide this table in the UI and the text report file, please set
 ;     ENA SCLR          ; 3                           ;
 ;     SCLR              ; 3                           ;
 ;     plain             ; 12                          ;
-; cycloneiii_lcell_comb ; 4088                        ;
+; cycloneiii_lcell_comb ; 4050                        ;
 ;     arith             ; 142                         ;
 ;         2 data inputs ; 9                           ;
 ;         3 data inputs ; 133                         ;
-;     normal            ; 3946                        ;
-;         1 data inputs ; 4                           ;
-;         2 data inputs ; 75                          ;
-;         3 data inputs ; 320                         ;
-;         4 data inputs ; 3547                        ;
+;     normal            ; 3908                        ;
+;         1 data inputs ; 3                           ;
+;         2 data inputs ; 91                          ;
+;         3 data inputs ; 332                         ;
+;         4 data inputs ; 3482                        ;
 ; cycloneiii_ram_block  ; 16                          ;
 ;                       ;                             ;
-; Max LUT depth         ; 23.00                       ;
-; Average LUT depth     ; 17.89                       ;
+; Max LUT depth         ; 24.00                       ;
+; Average LUT depth     ; 18.52                       ;
 +-----------------------+-----------------------------+
 
 
@@ -468,7 +461,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:00:12     ;
+; Top            ; 00:00:22     ;
 +----------------+--------------+
 
 
@@ -477,30 +470,30 @@ Note: In order to hide this table in the UI and the text report file, please set
 +-------------------------------+
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Analysis & Synthesis
-    Info: Version 15.0.0 Build 145 04/22/2015 SJ Full Version
-    Info: Processing started: Mon Jan 25 10:48:57 2016
+    Info: Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
+    Info: Processing started: Wed Jan 27 10:10:57 2016
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off core_flattened -c core_flattened
-Info (11104): Parallel Compilation has detected 8 hyper-threaded processors. However, the extra hyper-threaded processors will not be used by default. Parallel Compilation will use 4 of the 4 physical processors detected instead.
-Info (12021): Found 1 design units, including 1 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/core_flattened.sv
+Info (11104): Parallel Compilation has detected 4 hyper-threaded processors. However, the extra hyper-threaded processors will not be used by default. Parallel Compilation will use 2 of the 2 physical processors detected instead.
+Info (12021): Found 1 design units, including 1 entities, in source file /users/shawn/downloads/basic_core-master/core/src/core_flattened.sv
     Info (12023): Found entity 1: core_flattened
-Info (12021): Found 1 design units, including 1 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/cl_state_machine.sv
+Info (12021): Found 1 design units, including 1 entities, in source file /users/shawn/downloads/basic_core-master/core/src/cl_state_machine.sv
     Info (12023): Found entity 1: cl_state_machine
-Info (12021): Found 1 design units, including 1 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/net_packet_logger_s.sv
+Info (12021): Found 1 design units, including 1 entities, in source file /users/shawn/downloads/basic_core-master/core/src/net_packet_logger_s.sv
     Info (12023): Found entity 1: network_packet_s_logger
-Info (12021): Found 1 design units, including 1 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/instr_mem.sv
+Info (12021): Found 1 design units, including 1 entities, in source file /users/shawn/downloads/basic_core-master/core/src/instr_mem.sv
     Info (12023): Found entity 1: instr_mem
-Info (12021): Found 0 design units, including 0 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/disassemble.sv
-Info (12021): Found 1 design units, including 0 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/definitions.sv
+Info (12021): Found 0 design units, including 0 entities, in source file /users/shawn/downloads/basic_core-master/core/src/disassemble.sv
+Info (12021): Found 1 design units, including 0 entities, in source file /users/shawn/downloads/basic_core-master/core/src/definitions.sv
     Info (12022): Found design unit 1: definitions (SystemVerilog)
-Info (12021): Found 1 design units, including 1 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/data_mem.sv
+Info (12021): Found 1 design units, including 1 entities, in source file /users/shawn/downloads/basic_core-master/core/src/data_mem.sv
     Info (12023): Found entity 1: data_mem
-Info (12021): Found 1 design units, including 1 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/core.sv
+Info (12021): Found 1 design units, including 1 entities, in source file /users/shawn/downloads/basic_core-master/core/src/core.sv
     Info (12023): Found entity 1: core
-Info (12021): Found 1 design units, including 1 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/cl_decode.sv
+Info (12021): Found 1 design units, including 1 entities, in source file /users/shawn/downloads/basic_core-master/core/src/cl_decode.sv
     Info (12023): Found entity 1: cl_decode
-Info (12021): Found 1 design units, including 1 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/alu.sv
+Info (12021): Found 1 design units, including 1 entities, in source file /users/shawn/downloads/basic_core-master/core/src/alu.sv
     Info (12023): Found entity 1: alu
-Info (12021): Found 1 design units, including 1 entities, in source file /users/risanche/desktop/ucsdcse141l-labs-368c70ae0b2b/core/src/reg_file.sv
+Info (12021): Found 1 design units, including 1 entities, in source file /users/shawn/downloads/basic_core-master/core/src/reg_file.sv
     Info (12023): Found entity 1: reg_file
 Info (12127): Elaborating entity "core_flattened" for the top level hierarchy
 Info (12128): Elaborating entity "core" for hierarchy "core:core1"
@@ -543,24 +536,24 @@ Info (12128): Elaborating entity "cl_state_machine" for hierarchy "core:core1|cl
 Info (276014): Found 1 instances of uninferred RAM logic
     Info (276007): RAM logic "core:core1|reg_file:rf|RF" is uninferred due to asynchronous read logic
 Info (286030): Timing-Driven Synthesis is running
-Info (144001): Generated suppressed messages file C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/core/prj/output_files/core_flattened.map.smsg
+Info (144001): Generated suppressed messages file C:/Users/Shawn/Downloads/basic_core-master/core/prj/output_files/core_flattened.map.smsg
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
-Info (21057): Implemented 6421 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 6384 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 101 input pins
     Info (21059): Implemented 171 output pins
-    Info (21061): Implemented 6133 logic cells
+    Info (21061): Implemented 6096 logic cells
     Info (21064): Implemented 16 RAM segments
 Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 3 warnings
-    Info: Peak virtual memory: 761 megabytes
-    Info: Processing ended: Mon Jan 25 10:49:27 2016
-    Info: Elapsed time: 00:00:30
-    Info: Total CPU time (on all processors): 00:00:34
+    Info: Peak virtual memory: 739 megabytes
+    Info: Processing ended: Wed Jan 27 10:11:49 2016
+    Info: Elapsed time: 00:00:52
+    Info: Total CPU time (on all processors): 00:00:58
 
 
 +------------------------------------------+
 ; Analysis & Synthesis Suppressed Messages ;
 +------------------------------------------+
-The suppressed messages can be found in C:/Users/risanche/Desktop/ucsdcse141l-labs-368c70ae0b2b/core/prj/output_files/core_flattened.map.smsg.
+The suppressed messages can be found in C:/Users/Shawn/Downloads/basic_core-master/core/prj/output_files/core_flattened.map.smsg.
 
 
