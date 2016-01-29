@@ -71,7 +71,7 @@ class kernel{
     public static enum opcodes {
 		ADDU, SUBU, SLLV, SRAV, SRLV, AND, OR, NOR, SLT, SLTU, MOV, LW, LBU, SW, SB, JALR,
         BEQZ, BNEQZ, BGTZ, BLTZ,
-        DONE, BAR, NOTVALID, ROL, BXOR;
+        DONE, BAR, NOTVALID, ROL;
 
     /** gets an String as opcode and outputs the corresponding opcode in form of the used enumeration. */
 		public static opcodes toOpcode(String str)
@@ -98,7 +98,7 @@ class kernel{
 		opcodeTable.put("NOR"  , "00111");
 		opcodeTable.put("SLT"  , "01000");
 		opcodeTable.put("SLTU" , "01001");
-		opcodeTable.put("BXOR"  , "01101");
+		//opcodeTable.put("BXOR"  , "01101");
 		opcodeTable.put("JALR" , "10111");
 		opcodeTable.put("MOV"  , "01010");
 		opcodeTable.put("LW"   , "11000");
@@ -145,7 +145,7 @@ class kernel{
             case SB:
             case MOV:
             case ROL:
-            case BXOR:
+            //case BXOR:
 				if (instruction.operands.length!=2){
                     System.out.println("invalid number of operands in the following instruction");
                     instruction.print();
