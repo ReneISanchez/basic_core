@@ -43,8 +43,10 @@ package definitions;
     const logic [15:0]kSB    = 16'b11011_?????_??????;
 	 
 	 	 //Barrel rotate left
+	 const logic [15:0]kROR = 16'b01110_?????_??????;
 	 const logic [15:0]kBXOR =  16'b01111_?????_??????;
 	 const logic [15:0]kROL =   16'b11101_?????_??????;
+	 const logic [15:0]kANOT = 16'b01101_?????_??????;
 
     // 28
     // 29
@@ -75,8 +77,9 @@ package definitions;
         LBU         = 5'h19,
         SW          = 5'h1A,
         SB          = 5'h1B,
-        //ROT         = 5'h1C,
-		  BXOR			= 5'h0E,
+		  ROR		     = 5'h0E,
+		  ANOT		  = 5'h0D,
+		  BXOR			= 5'h0F,
         ROL         = 5'h1D,
         BARR,
         NOP

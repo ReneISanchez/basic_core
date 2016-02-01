@@ -294,6 +294,17 @@ ROL   $R7, $R2
 MOV   $R6, %ROL_ANS
 JALR  $R1, %CHECK
 
+// Test for ROR
+.const %ROR_ANS, 0x0000000F
+.const %ROR_ORIGINAL, 0x00000010
+.const %ROR_SHIFT_BY, 0x00000001
+ADDU  $R5, %ONE
+MOV   $R7, %ROR_ORIGINAL
+MOV   $R2, %ROR_SHIFT_BY
+ROR   $R7, $R2
+MOV   $R6, %ROR_ANS
+JALR  $R1, %CHECK
+
 // Test for BXOR
 
 .const %XOR_ANS, 0x11111100
@@ -305,6 +316,8 @@ MOV   $R2, %XOR_S
 BXOR  $R7, $R2
 MOV   $R6, %XOR_ANS
 JALR  $R1, %CHECK
+
+
 
 // We can check the correctness of BAR instrution 
 // through the output barrier signal.

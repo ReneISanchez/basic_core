@@ -42,7 +42,7 @@ set_global_assignment -name DEVICE EP4CE40F29C6
 set_global_assignment -name TOP_LEVEL_ENTITY core_flattened
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION "15.0.0 SP0.01WE"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "18:42:31  JANUARY 23, 2016"
-set_global_assignment -name LAST_QUARTUS_VERSION "15.0.0 SP0.01WE"
+set_global_assignment -name LAST_QUARTUS_VERSION 15.0.0
 set_global_assignment -name SYSTEMVERILOG_FILE ../src/core_flattened.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../src/cl_state_machine.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../src/net_packet_logger_s.sv

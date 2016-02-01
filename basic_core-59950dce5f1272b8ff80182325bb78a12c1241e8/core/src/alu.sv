@@ -35,8 +35,10 @@ module alu (
             kBLTZ:  jump_now_o = ($signed(rd_i)<$signed(32'd0))    ? 1'b1  : 1'b0;
             
             //bitwise barrel rotate left
-            kROL:   result_o   = ((rd_i) << rs_i[4:0]) | ( (rd_i) >> ~rs_i);
-				kBXOR:  result_o   = (~rd_i & rs_i)|(rd_i & ~rs_i);
+            kROL:   result_o   = ((rd_i) << rs_i[4:0]) | ( (rd_i) >> (32 - rs_i));
+				kBXOR:  result_o   = rd_i ^ rs_i;
+				kROR:   result_o   = ( (rd_i >> rs_i) & ~(~1 << (32 - rs_i)) ) | ( rd_i << (32 - rs_i));
+				kANOT:  result_o   = (~rd_i) & rs_i;
             
             kMOV, kLW, kLBU, kJALR, kBAR:  
                 begin

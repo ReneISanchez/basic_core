@@ -499,15 +499,12 @@ XOR:
 // $R4 : return value
 CH:
     MOV  $R5, $R1
-    NOR  $R5, $R5  // ~X
     AND  $R1, $R2  // X and Y
-    AND  $R5, $R3  // ~X and Z
-    MOV  $R7, $R1
-    MOV  $R8, $R5
-    //JALR $R31, %XOR
-    //MOV  $R4, $R9
-    BXOR $R7, $R8   // improvement
-    MOV  $R4,  $R7  // improvement
+    ANOT  $R5, $R3  // ~X and Z
+    //MOV  $R7, $R1
+    //MOV  $R8, $R5
+    BXOR $R1, $R5   // improvement
+    MOV  $R4,  $R1  // improvement
     JALR $R31, $R30
 
 // MAJ function from SHA-256
@@ -521,15 +518,12 @@ MAJ:
    AND  $R5, $R2 // XY
    AND  $R6, $R3 // YZ
    AND  $R1, $R3 // XZ
-   MOV  $R7, $R1
-   MOV  $R8, $R5
-   JALR $R31, %XOR 
-   //BXOR $R7, R8 
+   //MOV  $R7, $R1
+   //MOV  $R8, $R5
+   BXOR $R1, $R5
    //MOV  $R8, $R6
-   JALR $R31, %XOR
-   //BXOR $R7, $R8
-   //MOV  $R4, $R9
-   MOV  $R4, $R7
+   BXOR $R1, $R6
+   MOV  $R4, $R1
    JALR $R31, $R30
 
 // Big sigma 0 function from SHA-256 
@@ -537,29 +531,24 @@ MAJ:
 // $R2 : return value
 BIGSIG0:
     MOV  $R7, $R1
-    MOV  $R8, %S2
-    JALR $R31, %ROR
-    MOV  $R3, $R9  // term 1
+    //MOV  $R8, %S2
+    ROR  $R7, %S2
+    MOV  $R3, $R7  // term 1
     MOV  $R7, $R1
     MOV  $R8, %S3
     ADDU $R8, %S3
     ADDU $R8, %S7
-    JALR $R31, %ROR
-    MOV  $R4, $R9 // term 2
+    ROR  $R7, $R8
+    MOV  $R4, $R7 // term 2
     MOV  $R7, $R1
     MOV  $R8, %S11
     ADDU $R8, %S11
-    JALR $R31, %ROR
-    MOV  $R7, $R9 // term 3
+    ROR  $R7, $R8 // term 3
     MOV  $R8, $R4
-    JALR $R31, %XOR
-    //BXOR $R7, $R8
-    MOV  $R7, $R9
+    BXOR $R7, $R8
     MOV  $R8, $R3
-    JALR $R31, %XOR
-    //BXOR $R7, R8
-    MOV  $R2, $R9
-    //MOV  $R2, $R7 
+    BXOR $R7, $R8
+    MOV  $R2, $R7 
     JALR $R31, $R30
 
     
@@ -570,26 +559,21 @@ BIGSIG1:
     MOV  $R7, $R1
     MOV  $R8, %S3
     ADDU $R8, %S3
-    JALR $R31, %ROR
-    MOV  $R3, $R9 // term 1
+    ROR  $R7, $R8
+    MOV  $R3, $R7 // term 1
     MOV  $R7, $R1
     MOV  $R8, %S11
-    JALR $R31, %ROR
-    MOV  $R4, $R9 // term 2
+    ROR  $R7, $R8
+    MOV  $R4, $R7 // term 2
     MOV  $R7, $R1
     MOV  $R8, %S18
     ADDU $R8, %S7
-    JALR $R31, %ROR
-    MOV  $R7, $R9 // term 3
+    ROR  $R7, $R8 // term 3
     MOV  $R8, $R4
-    JALR $R31, %XOR
-    //BXOR $R7, $R8
-    MOV  $R7, $R9
+    BXOR $R7, $R8
     MOV  $R8, $R3
-    JALR $R31, %XOR
-    //BXOR $R7, $R8
-    MOV  $R2, $R9
-    //MOV  $R2, $R7
+    BXOR $R7, $R8
+    MOV  $R2, $R7
     JALR $R31, $R30
 
 // Small sigma 0 function from SHA-256
@@ -598,20 +582,17 @@ BIGSIG1:
 SMSIG0:
     MOV  $R7, $R1
     MOV  $R8, %S7
-    JALR $R31, %ROR
-    MOV  $R3, $R9  // term 1
+    ROR  $R7, $R8
+    MOV  $R3, $R7  // term 1
     MOV  $R7, $R1
     MOV  $R8, %S18
-    JALR $R31, %ROR
-    MOV  $R7, $R9  // term 2
+    ROR  $R7, $R8 // term 2
     MOV  $R8, $R3
-    JALR $R31, %XOR
-    //BXOR $R7, $R8
-    MOV  $R7, $R9
+    BXOR $R7, $R8
     MOV  $R8, $R1
     SRLV $R8, %S3
-    JALR $R31, %XOR
-    MOV  $R2, $R9
+    BXOR $R7, $R8
+    MOV  $R2, $R7
     JALR $R31, $R30
 
 
@@ -621,20 +602,17 @@ SMSIG0:
 SMSIG1:
     MOV  $R7, $R1
     MOV  $R8, %S17
-    JALR $R31, %ROR
-    MOV  $R3, $R9  // term 1
+    ROR  $R7, $R8
+    MOV  $R3, $R7  // term 1
     MOV  $R7, $R1
     MOV  $R8, %S19
-    JALR $R31, %ROR
-    MOV  $R7, $R9  // term 2
+    ROR  $R7, $R8  // term 2
     MOV  $R8, $R3
-    JALR $R31, %XOR
-    //BXOR $R7, $R8
-    MOV  $R7, $R9
+    BXOR $R7, $R8
     MOV  $R8, $R1
     SRLV $R8, %S10
-    JALR $R31, %XOR
-    MOV  $R2, $R9
+    BXOR $R7, $R8
+    MOV  $R2, $R7
     JALR $R31, $R30
 
 // EOF
