@@ -47,7 +47,7 @@ package definitions;
 	 const logic [15:0]kBXOR =  16'b01111_?????_??????;
 	 const logic [15:0]kROL =   16'b11101_?????_??????;
 	 const logic [15:0]kANOT = 16'b01101_?????_??????;
-
+	 const logic [15:0]kNOP = 16'b11100_?????_??????;
     // 28
     // 29
     // 30
@@ -171,6 +171,27 @@ package definitions;
         logic [mask_length_gp-1:0] barrier_mask_r_f;
         logic [mask_length_gp-1:0] barrier_r_f;
     } debug_s;
+	 
+	 	// a struct for all control signals
+	typedef struct packed {
+			logic is_load_op_s, op_writes_rf_s, is_store_op_s, is_mem_op_s, is_byte_op_s;
+	} control_s;
+	
+	// a struct for pipcut1, contains instruction and PC_r 
+	typedef struct packed {
+			instruction_s instr_if;
+			logic [imem_addr_width_gp-1:0] PC_r_if;
+	} pipcut_if_s;
+	
+	/*typedef struct packed {
+			instruction_s instr_id;
+			control_s control_id;
+			logic [31:0] rs_val_or_zero_id, rd_val_or_zero_id;
+	} pipcut_id_s;*/
+	
+
+	
     
+	 
     //`endif
 endpackage // defintions

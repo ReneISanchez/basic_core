@@ -37,6 +37,13 @@ module core #(
                                 
     // Ins. memory output
     instruction_s instruction, imem_out;
+	 
+	 // pipcuts
+	 control_s control;
+	 pipcut_if_s pipcut_if_n, pipcut_if_r;
+	 //pipcut_id_s pipcut_id;
+	 
+	 logic jump_flash;
     
     // Result of ALU, Register file outputs, Data memory output data
     logic [31:0] alu_result, rs_val_or_zero, rd_val_or_zero, rs_val, rd_val;
@@ -99,20 +106,73 @@ module core #(
         if (!n_reset)
             begin
             PC_r     <= 0;
-            end
+				pipcut_if_r.instr_if <= 0;
+				pipcut_if_r.PC_r_if <= 0;
+			end
+				
         else
             begin
             if (PC_wen)
                 begin
                 PC_r <= PC_n;
             end
+				// pipcut for stage 1
+				pipcut_if_n.PC_r_if <= PC_r;
+				if (jump_flash)
+					begin 
+					//pipcut_if_n.instr_if <= 0;
+					pipcut_if_n.PC_r_if <= 0;
+				end
+				else
+					begin
+					if (stall)
+						begin
+						pipcut_if_r.instr_if <= pipcut_if_r.instr_if;
+						pipcut_if_r.PC_r_if <= pipcut_if_r.PC_r_if;
+					end
+					else 
+						begin
+						pipcut_if_r.instr_if <= pipcut_if_n.instr_if;
+						pipcut_if_r.PC_r_if <= pipcut_if_n.PC_r_if;
+					end
+				end
         end
+		  
+
+		  
+
+		  // pipcut for stage 2
+		  /*control.is_load_op_s <= is_load_op_c;
+		  control.op_writes_rf_s <= op_writes_rf_c;
+		  control.is_byte_op_s <= is_byte_op_c;
+		  control.is_mem_op_s <= is_mem_op_c;
+		  control.is_store_op_s <= is_store_op_c;
+		  
+			
+		  if (stall)
+				begin
+				
+				pipcut_id.instr_id <= pipcut_id.instr_id;
+				pipcut_id.rs_val_or_zero_id <= pipcut_id.rs_val_or_zero_id;
+				pipcut_id.rd_val_or_zero_id <= pipcut_id.rd_val_or_zero_id;
+				pipcut_id.control_id <= pipcut_id.control_id;
+		   end
+			else
+				begin
+				pipcut_id.instr_id <= pipcut_if.instr_if;
+				pipcut_id.rs_val_or_zero_id <= rs_val_or_zero;
+				pipcut_id.rd_val_or_zero_id <= rd_val_or_zero;
+				pipcut_id.control_id <= control;
+		  	end*/
+			
+		  
     end
     
     // Determine next PC
     assign pc_plus1     = PC_r + 1'b1;  // Increment PC.
-    assign imm_jump_add = $signed(instruction.rs_imm) + $signed(PC_r);  // Calculate possible branch address.
+    assign imm_jump_add = $signed(pipcut_if_r.instr_if.rs_imm) + $signed(pipcut_if_r.PC_r_if);  // Calculate possible branch address.
     
+
     // Next PC is based on network or the instruction
     always_comb
         begin
@@ -130,24 +190,30 @@ module core #(
             end
         else
             begin
-            unique casez (instruction)
+            unique casez (pipcut_if_n.instr_if)
                 // On a JALR, jump to the address in RS (passed via alu_result).
                 kJALR:
                     begin
+						  jump_flash = 1;
                     PC_n = alu_result[0+:imem_addr_width_p];
                 end
         
                 // Branch instructions
                 kBNEQZ, kBEQZ, kBLTZ, kBGTZ:
                     begin
+						  jump_flash = 1;
                     // If the branch is taken, use the calculated branch address.
                     if (jump_now)
                         begin
+								
                         PC_n = imm_jump_add;
                     end
                 end
                 
-                default: begin end
+                default: 
+					 begin
+						jump_flash = 0; 
+					 end
             endcase
         end
     end
@@ -170,10 +236,13 @@ module core #(
     
     // Since imem has one cycle delay and we send next cycle's address, PC_n
     assign instruction = imem_out;
+	 assign pipcut_if_n.instr_if = instruction;
+	 
+	 
     
     // Decode module
     cl_decode decode (
-        .instruction_i(instruction),
+        .instruction_i(pipcut_if_r.instr_if),
         .is_load_op_o(is_load_op_c),
         .op_writes_rf_o(op_writes_rf_c),
         .is_store_op_o(is_store_op_c),
@@ -181,22 +250,23 @@ module core #(
         .is_byte_op_o(is_byte_op_c)
     );
     
+	 
     // Selection between network and address included in the instruction which is exeuted
     // Address for Reg. File is shorter than address of Ins. memory in network data
     // Since network can write into immediate registers, the address is wider
     // but for the destination register in an instruction the extra bits must be zero
     assign rd_addr = (net_reg_write_cmd)
-                    ? (net_packet_i.net_addr [0+:($bits(instruction.rs_imm))])
-                    : ({{($bits(instruction.rs_imm)-$bits(instruction.rd)){1'b0}}
-                        ,{instruction.rd}});
+                    ? (net_packet_i.net_addr [0+:($bits(pipcut_if_r.instr_if.rs_imm))])
+                    : ({{($bits(pipcut_if_r.instr_if.rs_imm)-$bits(pipcut_if_r.instr_if.rd)){1'b0}}
+                        ,{pipcut_if_r.instr_if.rd}});
     
     // Register file
     reg_file #(
-            .addr_width_p($bits(instruction.rs_imm))
+            .addr_width_p($bits(pipcut_if_r.instr_if.rs_imm))
         )
         rf (
             .clk(clk),
-            .rs_addr_i(instruction.rs_imm),
+            .rs_addr_i(pipcut_if_r.instr_if.rs_imm),
             .rd_addr_i(rd_addr),
             .w_addr_i(rd_addr),
             .wen_i(rf_wen),
@@ -205,14 +275,17 @@ module core #(
             .rd_val_o(rd_val)
         );
     
-    assign rs_val_or_zero = instruction.rs_imm ? rs_val : 32'b0;
+    assign rs_val_or_zero = pipcut_if_r.instr_if.rs_imm ? rs_val : 32'b0;
     assign rd_val_or_zero = rd_addr            ? rd_val : 32'b0;
     
     // ALU
     alu alu_1 (
-            .rd_i(rd_val_or_zero),
-            .rs_i(rs_val_or_zero),
-            .op_i(instruction),
+            //.rd_i(pipcut_id.rd_val_or_zero_id),
+            //.rs_i(pipcut_id.rs_val_or_zero_id),
+				.rd_i(rd_val_or_zero),
+				.rs_i(rs_val_or_zero),
+            //.op_i(pipcut_id.instr_id),
+				.op_i(pipcut_if_r.instr_if),
             .result_o(alu_result),
             .jump_now_o(jump_now)
         );
@@ -276,7 +349,7 @@ module core #(
             rf_wd = net_packet_i.net_data;
             end
         // On a JALR, we want to write the return address to the destination register.
-        else if (instruction ==? kJALR) // TODO: this is written poorly. 
+        else if (pipcut_if_r.instr_if ==? kJALR) // TODO: this is written poorly. 
             begin
             rf_wd = pc_plus1;
             end
@@ -315,7 +388,7 @@ module core #(
     
     // State machine
     cl_state_machine state_machine (
-        .instruction_i(instruction),
+        .instruction_i(pipcut_if_r.instr_if),
         .state_i(state_r),
         .exception_i(exception_o),
         .net_PC_write_cmd_IDLE_i(net_PC_write_cmd_IDLE),
