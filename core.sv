@@ -418,7 +418,7 @@ module core #(
     assign stall = stall_non_mem || (mem_stage_n != DMEM_IDLE) || (state_r != RUN) || bubble;
 	 
     // Launch LD/ST: must hold valid high until data memory acknowledges request.
-    assign valid_to_mem_c = pipcut_me_r.control_me.is_mem_op_s & (mem_stage_r != DMEM_REQ_ACKED);
+    assign valid_to_mem_c = pipcut_me_r.control_me.is_mem_op_s & (mem_stage_r < DMEM_REQ_ACKED);
     
     always_comb
         begin
@@ -543,8 +543,8 @@ module core #(
 	 always_comb begin
 	    if(pipcut_me_r.control_me.op_writes_rf_s && pipcut_me_r.instr_me.rd && (pipcut_me_r.instr_me.rd == pipcut_id_r.instr_id.rs_imm))
 		      forwardA = 2'b10;
-		 else if (pipcut_wb_r.control_wb.op_writes_rf_s && pipcut_wb_r.rd_val_wb && !(pipcut_wb_r.control_wb.op_writes_rf_s && pipcut_me_r.instr_me.rd &&
-		          (pipcut_me_r.instr_me.rd == pipcut_id_r.instr_id.rs_imm)) && (pipcut_wb_r.instr_wb.rd == pipcut_id_r.instr_id.rs_imm))
+		 else if (pipcut_wb_r.control_wb.op_writes_rf_s && pipcut_wb_r.instr_wb.rd && !(pipcut_wb_r.control_wb.op_writes_rf_s && pipcut_me_r.instr_me.rd &&
+		          (pipcut_me_r.instr_me.rd === pipcut_id_r.instr_id.rs_imm)) && (pipcut_wb_r.instr_wb.rd === pipcut_id_r.instr_id.rs_imm))
 				forwardA = 2'b01;
 		 else 
 				forwardA = 2'b00;
@@ -556,7 +556,7 @@ module core #(
 				(pipcut_me_r.instr_me.rd == pipcut_id_r.instr_id.rd))
 				forwardB = 2'b10;
 		else if(pipcut_wb_r.control_wb.op_writes_rf_s && pipcut_wb_r.instr_wb.rd && !(pipcut_me_r.control_me.op_writes_rf_s && pipcut_me_r.instr_me.rd &&
-		          (pipcut_wb_r.instr_wb.rd == pipcut_id_r.instr_id.rd)) && (pipcut_wb_r.instr_wb.rd == pipcut_id_r.instr_id.rd))
+		          (pipcut_me_r.instr_me.rd === pipcut_id_r.instr_id.rd)) && (pipcut_wb_r.instr_wb.rd === pipcut_id_r.instr_id.rd))
 				forwardB = 2'b01;
 		else 
 				forwardB = 2'b00;
@@ -621,7 +621,7 @@ module core #(
     // or by an an BAR instruction that is committing
     assign barrier_n = net_PC_write_cmd_IDLE
                     ? net_packet_i.net_data[0+:mask_length_gp]
-                    : ((pipcut_id_r.instr_id ==? kBAR) & ~stall)
+                    : ((pipcut_if_r.instr_if ==? kBAR) & ~stall)
                         ? alu_result [0+:mask_length_gp]
                         : barrier_r;
     
