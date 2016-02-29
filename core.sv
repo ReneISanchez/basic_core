@@ -474,9 +474,8 @@ module core #(
 	 
     // Sequential part, including barrier, exception and state
     always_ff @ (posedge clk)
-        begin
         if (!n_reset)
-            begin
+			begin
 				PC_r            <= 0;
             barrier_mask_r  <= {(mask_length_gp){1'b0}};
             barrier_r       <= {(mask_length_gp){1'b0}};
@@ -533,7 +532,6 @@ module core #(
 				instruction_r   <= instruction;
 				PC_wen_r       <= PC_wen;
         end
-    end
 	 
 	 ///////////////////////////////////////////////
 	 //hazard control START
