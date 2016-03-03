@@ -415,10 +415,10 @@ module core #(
                         || (net_imem_write_cmd);
     // Stall if LD/ST still active; or in non-RUN state
     //assign stall = stall_non_mem || (mem_stage_n != DMEM_REQ_ACKED) || (state_r != RUN) || bubble;
-    assign stall = stall_non_mem || (mem_stage_n != DMEM_IDLE) || (state_r != RUN) || bubble;
+    assign stall = stall_non_mem || (mem_stage_n != 0) || (state_r != RUN) || bubble;
 	 
     // Launch LD/ST: must hold valid high until data memory acknowledges request.
-    assign valid_to_mem_c = pipcut_me_r.control_me.is_mem_op_s & (mem_stage_r < DMEM_REQ_ACKED);
+    assign valid_to_mem_c = pipcut_me_r.control_me.is_mem_op_s & (mem_stage_r < 2'b10);
     
     always_comb
         begin
@@ -477,8 +477,8 @@ module core #(
         if (!n_reset)
 			begin
 				PC_r            <= 0;
-            barrier_mask_r  <= {(mask_length_gp){1'b0}};
-            barrier_r       <= {(mask_length_gp){1'b0}};
+            barrier_mask_r  <= 0;
+            barrier_r       <= 0;
             state_r         <= IDLE;
 				instruction_r   <= 0;
 				PC_wen_r        <= 0;
@@ -619,8 +619,8 @@ module core #(
     // or by an an BAR instruction that is committing
     assign barrier_n = net_PC_write_cmd_IDLE
                     ? net_packet_i.net_data[0+:mask_length_gp]
-                    : ((pipcut_if_r.instr_if ==? kBAR) & ~stall)
-                        ? alu_result [0+:mask_length_gp]
+                    : ((pipcut_me_r.instr_me ==? kBAR) & ~stall)
+                        ? pipcut_me_r.alu_result_me [0+:mask_length_gp]
                         : barrier_r;
     
     // exception_n signal, which indicates an exception
