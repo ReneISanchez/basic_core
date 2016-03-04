@@ -539,9 +539,9 @@ module core #(
 	 
     //forwardA logic
 	 always_comb begin
-	    if(pipcut_me_r.control_me.op_writes_rf_s && pipcut_me_r.instr_me.rd && (pipcut_me_r.instr_me.rd == pipcut_id_r.instr_id.rs_imm))
+	    if(pipcut_me_r.control_me.op_writes_rf_s && (pipcut_me_r.instr_me.rd != 0) && (pipcut_me_r.instr_me.rd == pipcut_id_r.instr_id.rs_imm))
 		      forwardA = 2'b10;
-		 else if (pipcut_wb_r.control_wb.op_writes_rf_s && pipcut_wb_r.instr_wb.rd && !(pipcut_wb_r.control_wb.op_writes_rf_s && pipcut_me_r.instr_me.rd &&
+		 else if (pipcut_wb_r.control_wb.op_writes_rf_s && (pipcut_wb_r.instr_wb.rd != 0) && !(pipcut_wb_r.control_wb.op_writes_rf_s && (pipcut_me_r.instr_me.rd != 0) &&
 		          (pipcut_me_r.instr_me.rd === pipcut_id_r.instr_id.rs_imm)) && (pipcut_wb_r.instr_wb.rd === pipcut_id_r.instr_id.rs_imm))
 				forwardA = 2'b01;
 		 else 
@@ -550,10 +550,10 @@ module core #(
 	 
 	 //forwardB logic
 	 always_comb begin
-		if(pipcut_me_r.control_me.op_writes_rf_s && pipcut_me_r.instr_me.rd &&
+		if(pipcut_me_r.control_me.op_writes_rf_s && (pipcut_me_r.instr_me.rd != 0) &&
 				(pipcut_me_r.instr_me.rd == pipcut_id_r.instr_id.rd))
 				forwardB = 2'b10;
-		else if(pipcut_wb_r.control_wb.op_writes_rf_s && pipcut_wb_r.instr_wb.rd && !(pipcut_me_r.control_me.op_writes_rf_s && pipcut_me_r.instr_me.rd &&
+		else if(pipcut_wb_r.control_wb.op_writes_rf_s && (pipcut_wb_r.instr_wb.rd != 0) && !(pipcut_me_r.control_me.op_writes_rf_s && pipcut_me_r.instr_me.rd &&
 		          (pipcut_me_r.instr_me.rd === pipcut_id_r.instr_id.rd)) && (pipcut_wb_r.instr_wb.rd === pipcut_id_r.instr_id.rd))
 				forwardB = 2'b01;
 		else 
