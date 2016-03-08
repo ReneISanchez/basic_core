@@ -75,6 +75,10 @@ module core #(
 		  assign control_fresh.is_mem_op_s = is_mem_op_c; 
 		  assign control_fresh.is_byte_op_s = is_byte_op_c; 
 		  
+	 logic jalr_reg;
+	 logic [31:0] rf_wd_reg;
+	 logic [31:0] rf_wd_reg2;
+		  
     // Handshak protocol signals for memory
     logic yumi_to_mem_c;
     
@@ -322,6 +326,7 @@ module core #(
                     ? (net_packet_i.net_addr [0+:($bits(instruction.rs_imm))])
                     : ({{($bits(instruction.rs_imm)-$bits(instruction.rd)){1'b0}}
                         ,{pipcut_wb_r.instr_wb.rd}});
+							
     
     // Register file
     reg_file #(
@@ -331,7 +336,9 @@ module core #(
             .clk(clk),
             .rs_addr_i(pipcut_if_r.instr_if.rs_imm),
             //.rd_addr_i(rd_addr),
-				.rd_addr_i({{($bits(instruction_r.rs_imm)-$bits(instruction_r.rd)){1'b0}},{pipcut_if_r.instr_if.rd}}),
+				.rd_addr_i(({{($bits(instruction.rs_imm)-$bits(instruction.rd)){1'b0}}
+                        ,{pipcut_if_r.instr_if.rd}})),
+				//.rd_addr_i({{($bits(instruction_r.rs_imm)-$bits(instruction_r.rd)){1'b0}},{pipcut_if_r.instr_if.rd}}),
             .w_addr_i(rd_addr),
             .wen_i(rf_wen),
             .w_data_i(rf_wd),
@@ -351,6 +358,8 @@ module core #(
 		default: 
 			rs_val_or_zero = pipcut_id_r.instr_id.rs_imm? pipcut_id_r.rs_val_id : 32'b0;
 		endcase
+		
+	 logic [31:0] jalr_rd_val;	
 	 
 	 always_comb
 		unique casex(forwardB)
@@ -382,6 +391,8 @@ module core #(
             .result_o(alu_result),
             .jump_now_o(jump_now)
         );
+		  
+
 		  
 		 
 	 assign pipcut_me_n.instr_me = pipcut_id_r.instr_id;
@@ -457,7 +468,7 @@ module core #(
         // On a JALR, we want to write the return address to the destination register.
         else if (pipcut_wb_r.instr_wb ==? kJALR) // TODO: this is written poorly. 
             begin
-            rf_wd = (pipcut_wb_r.instr_wb.rd == 0)? 0:pipcut_wb_r.PC_r_wb+1;
+            rf_wd = pipcut_wb_r.PC_r_wb+1;
             end
         // On a load, we want to write the data from data memory to the destination register.
         else if (pipcut_wb_r.control_wb.is_load_op_s)
@@ -470,7 +481,8 @@ module core #(
             rf_wd = pipcut_wb_r.alu_result_wb;
         end
     end
-    
+	 
+
 	 
     // Sequential part, including barrier, exception and state
     always_ff @ (posedge clk)
@@ -494,6 +506,20 @@ module core #(
 				if(PC_wen)
 					begin
 					PC_r <= PC_n;
+					
+					//jalr_reg <= (pipcut_wb_r.instr_wb ==? kJALR);
+					//rf_wd_reg <= rf_wd;
+		
+					//rf_wd_reg2 <= (jalr_reg)?rf_wd_reg:rf_wd;
+					/*					
+
+					if(pipcut_me_n.instr_me ==? kJALR)
+						begin
+						pipcut_if_r     <= pipcut_if_n;
+						pipcut_id_r     <= 0;
+						pipcut_me_r     <= pipcut_me_n;
+						pipcut_wb_r     <= pipcut_wb_n;
+						end */
 					if(jump_now)
 						begin
 						pipcut_if_r     <= 0;
@@ -539,10 +565,9 @@ module core #(
 	 
     //forwardA logic
 	 always_comb begin
-	    if(pipcut_me_r.control_me.op_writes_rf_s && (pipcut_me_r.instr_me.rd != 0) && (pipcut_me_r.instr_me.rd == pipcut_id_r.instr_id.rs_imm))
+	    if(!pipcut_me_r.control_me.is_load_op_s && pipcut_me_r.control_me.op_writes_rf_s && (pipcut_me_r.instr_me.rd != 0) && (pipcut_me_r.instr_me.rd == pipcut_id_r.instr_id.rs_imm))
 		      forwardA = 2'b10;
-		 else if (pipcut_wb_r.control_wb.op_writes_rf_s && (pipcut_wb_r.instr_wb.rd != 0) && !(pipcut_wb_r.control_wb.op_writes_rf_s && (pipcut_me_r.instr_me.rd != 0) &&
-		          (pipcut_me_r.instr_me.rd === pipcut_id_r.instr_id.rs_imm)) && (pipcut_wb_r.instr_wb.rd === pipcut_id_r.instr_id.rs_imm))
+		 else if (pipcut_wb_r.control_wb.op_writes_rf_s && (pipcut_wb_r.instr_wb.rd != 0) && (pipcut_wb_r.instr_wb.rd === pipcut_id_r.instr_id.rs_imm))
 				forwardA = 2'b01;
 		 else 
 				forwardA = 2'b00;
@@ -550,22 +575,26 @@ module core #(
 	 
 	 //forwardB logic
 	 always_comb begin
-		if(pipcut_me_r.control_me.op_writes_rf_s && (pipcut_me_r.instr_me.rd != 0) &&
-				(pipcut_me_r.instr_me.rd == pipcut_id_r.instr_id.rd))
+		if( (!pipcut_me_r.control_me.is_load_op_s && pipcut_me_r.control_me.op_writes_rf_s && (pipcut_me_r.instr_me.rd != 0) &&
+				(pipcut_me_r.instr_me.rd == pipcut_id_r.instr_id.rd)))
 				forwardB = 2'b10;
-		else if(pipcut_wb_r.control_wb.op_writes_rf_s && (pipcut_wb_r.instr_wb.rd != 0) && !(pipcut_me_r.control_me.op_writes_rf_s && pipcut_me_r.instr_me.rd &&
-		          (pipcut_me_r.instr_me.rd === pipcut_id_r.instr_id.rd)) && (pipcut_wb_r.instr_wb.rd === pipcut_id_r.instr_id.rd))
+		else if( pipcut_wb_r.control_wb.op_writes_rf_s && (pipcut_wb_r.instr_wb.rd != 0) && (pipcut_wb_r.instr_wb.rd === pipcut_id_r.instr_id.rd))
 				forwardB = 2'b01;
 		else 
 				forwardB = 2'b00;
 		end
 		
 		//Bubble logic
+	  /*
 	  assign bubble = (pipcut_id_r.control_id.is_load_op_s || pipcut_id_r.control_id.is_store_op_s) &&
 							 ((pipcut_id_r.instr_id.rd == pipcut_if_r.instr_if.rs_imm) ||
 							 (pipcut_id_r.instr_id.rd == pipcut_if_r.instr_if.rd) ||
 							  control_fresh.is_load_op_s || control_fresh.is_store_op_s);
+	  */
 	  
+	  	  assign bubble = (pipcut_id_r.control_id.is_load_op_s || pipcut_id_r.control_id.is_store_op_s) &&
+							 ((pipcut_id_r.instr_id.rd == pipcut_if_r.instr_if.rs_imm) ||
+							 pipcut_id_r.instr_id.rd == pipcut_if_r.instr_if.rd);
 	 /////////////////////////////////////////////// 
 	 //hazard control END
 	 //////////////////////////////////////////////
