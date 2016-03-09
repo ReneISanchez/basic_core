@@ -181,6 +181,7 @@ package definitions;
 	typedef struct packed {
 			instruction_s instr_if;
 			logic [imem_addr_width_gp-1:0] PC_r_if;
+			control_s control_if;
 	} pipcut_if_s;
 	
 	typedef struct packed {

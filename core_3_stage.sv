@@ -41,8 +41,8 @@ module core #(
 	 
 	 // pipcuts
 	 //control_s control;
-	 //pipcut_if_s  pipcut_if_n,  pipcut_if_r;
-	 pipcut_id_s  pipcut_id_n,  pipcut_id_r;
+	 pipcut_if_s  pipcut_if_n,  pipcut_if_r;
+	 //pipcut_id_s  pipcut_id_n,  pipcut_id_r;
 	 //pipcut_me_s  pipcut_me_n,  pipcut_me_r;
 	 pipcut_wb_s  pipcut_wb_n,  pipcut_wb_r;
 	 
@@ -131,102 +131,16 @@ module core #(
     // Update the PC if we get a PC write command from network, or the core is not stalled.
     assign PC_wen = (net_PC_write_cmd_IDLE || (!stall && nop_n);
 	 
+	 
 	 always_comb
 	 begin
 		if(PC_wen_r)
 			instruction = imem_out;
 		else if (nop_r)
-			instruction = 16'b0000000000000000;
+			instruction = 16'b0;
 		else if (stall)
 			instruction = instruction_r;
 	end
-    /*
-    // Program counter
-    always_ff @ (posedge clk)
-        begin
-        if (!n_reset)
-            begin
-            PC_r     <= 0;
-			end
-				
-        else
-            begin
-            if (PC_wen)
-                begin
-                PC_r <= PC_n;
-					 //pipcut_if_r.PC_r_if <= PC_r;
-				
-
-				// pipcut for stage 1
-					if (jump_now)
-						begin	
-						//$display("ERROR: %x",jump_flash);
-						pipcut_if_r <= 0;
-						pipcut_id_r <= 0;
-						pipcut_me_r <= pipcut_me_n;
-						pipcut_wb_r <= pipcut_wb_n;
-						end
-					else if (net_PC_write_cmd_IDLE)
-						begin
-						pipcut_if_r <= 0;
-						pipcut_id_r <= 0;
-						pipcut_me_r <= 0;
-						pipcut_wb_r <= 0;
-						//also set all other pipecuts to 0
-						end 
-				/*else if (stall)
-				begin
-				pipcut_if_r <= pipcut_if_r;
-				
-				end*/ /*
-					else
-						begin	
-						//$display("TRUTH: %x", jump_flash);
-						pipcut_if_r <= pipcut_if_n;
-						pipcut_id_r <= pipcut_id_n;
-						pipcut_me_r <= pipcut_me_n;
-						pipcut_wb_r <= pipcut_wb_n;
-						end
-			 end
-			 else if(bubble)
-			   begin
-						pipcut_if_r <= pipcut_if_r;
-						pipcut_id_r <= 0;
-						pipcut_me_r <= pipcut_me_n;
-						pipcut_wb_r <= pipcut_wb_n;
-				end
-        end
-		  
-		
-		  
-
-		   //pipcut for stage 2
-		  /*control.is_load_op_s <= is_load_op_c;
-		  control.op_writes_rf_s <= op_writes_rf_c;
-		  control.is_byte_op_s <= is_byte_op_c;
-		  control.is_mem_op_s <= is_mem_op_c;
-		  control.is_store_op_s <= is_store_op_c;
-		  
-			
-		  if (stall)
-				begin
-				
-				pipcut_id.instr_id <= pipcut_id.instr_id;
-				pipcut_id.rs_val_or_zero_id <= pipcut_id.rs_val_or_zero_id;
-				pipcut_id.rd_val_or_zero_id <= pipcut_id.rd_val_or_zero_id;
-				pipcut_id.control_id <= pipcut_id.control_id;
-		   end
-			else
-				begin
-				pipcut_id.instr_id <= pipcut_if.instr_if;
-				pipcut_id.rs_val_or_zero_id <= rs_val_or_zero;
-				pipcut_id.rd_val_or_zero_id <= rd_val_or_zero;
-				pipcut_id.control_id <= control;
-		  	end*/
-			 /*
-		  
-    end
-	 */
 	 
 	 // Next PC is based on network or the instruction
     always_comb
@@ -235,7 +149,7 @@ module core #(
 		  if(net_PC_write_cmd_IDLE)
 		     PC_n = net_packet_i.net_addr;
 		  else 
-			  unique casez(pipcut_id_r.instr_id)
+			  unique casez(pipcut_if_r.instr_if)
 					kJALR:
 						PC_n = alu_result[0+:imem_addr_width_p];
 					kBNEQZ, kBEQZ, kBLTZ, kBGTZ:
@@ -247,56 +161,8 @@ module core #(
     
     // Determine next PC
     assign pc_plus1     = PC_r + 1'b1;  // Increment PC.
-    assign imm_jump_add = $signed(pipcut_id_r.instr_id.rs_imm) + $signed(PC_r);  // Calculate possible branch address.
-    /*
-
-    // Next PC is based on network or the instruction
-    always_comb
-        begin
-        PC_n = pc_plus1;    // Default to the next instruction.
-		  //jump_flash = 0;
-        // Should not update PC.
-        //if (!PC_wen)
-            //begin
-					//PC_n = PC_r;
-				//end
-				
-        // If the network is writing to PC, use that instead.
-         if (net_PC_write_cmd_IDLE)
-            begin
-            PC_n = net_packet_i.net_addr;
-            end
-        else
-            begin
-            unique casez (pipcut_id_r.instr_id)
-                // On a JALR, jump to the address in RS (passed via alu_result).
-                kJALR:
-                    begin
-						  //jump_flash = 1;
-                    PC_n = alu_result[0+:imem_addr_width_p];
-                end
-        
-                // Branch instructions
-                kBNEQZ, kBEQZ, kBLTZ, kBGTZ:
-                    begin
-						  
-                    // If the branch is taken, use the calculated branch address.
-                    if (jump_now)
-                        begin
-								//$display("jump %x\n",jump_flash);
-								//jump_flash = 1;
-                        PC_n = imm_jump_add;
-                    end
-                end
-                
-                default: 
-					 begin 
-					     //jump_flash = 0;
-					 end
-            endcase
-        end
-    end
-    */
+    assign imm_jump_add = $signed(pipcut_if_r.instr_if.rs_imm) + $signed(PC_r);  // Calculate possible branch address.
+    
     // Selection between network and core for instruction address
     assign imem_addr = (net_imem_write_cmd) ? net_packet_i.net_addr  
                                         : PC_n;
@@ -313,8 +179,11 @@ module core #(
             .instruction_o(imem_out)
         );
  
+	assign pipcut_if_n.instr_if = (stall)? pipcut_if_r.instr_if : instruction;
+	assign pipcut_if_n.control_if = 0;
+ 
 	always_ff@(posedge clk) begin
-		pipcut_id_r <= pipcut_id_n;
+		pipcut_if_r <= pipcut_if_n;
 		nop_r <= nop_n;
 	end
 	
@@ -326,7 +195,7 @@ module core #(
 				nop_n = 1'b1;
 			default: begin end
 		endcase
-		unique casez(pipcut_id_r.instr_id)
+		unique casez(pipcut_if_r.instr_id)
 			kJALR, kBNEQZ, kBEQZ, kBLTZ, kLW, kLBU, kSW, kSB:
 				nop_n = 1'b0;
 		default: begin end
@@ -335,7 +204,7 @@ end
 	
     // Decode module
     cl_decode decode (
-        .instruction_i(pipcut_id_r.instr_id),
+        .instruction_i(pipcut_if_r.instr_if),
         .is_load_op_o(is_load_op_c),
         .op_writes_rf_o(op_writes_rf_c),
         .is_store_op_o(is_store_op_c),
@@ -359,17 +228,22 @@ end
     // but for the destination register in an instruction the extra bits must be zero
 
     assign rd_addr = ({{($bits(instruction.rs_imm)-$bits(instruction.rd)){1'b0}}
-                 ,{pipcut_id_r.instr_id.rd}});
+                 ,{pipcut_if_r.instr_if.rd}});
     
+	 assign w_addr = (net_reg_write_cmd)
+            ? (net_packet_i.net_addr [0+:($bits(instruction.rs_imm))])
+            : ({{($bits(instruction.rs_imm)-$bits(instruction.rd)){1'b0}}
+            ,{pipcut_wb_r.instr_wb.rd}});
+	 
     // Register file
     reg_file #(
             .addr_width_p($bits(instruction.rs_imm))
         )
         rf (
             .clk(clk),
-            .rs_addr_i(pipcut_id_r.instr_id.rs_imm),
+            .rs_addr_i(pipcut_if_r.instr_if.rs_imm),
             //.rd_addr_i(rd_addr),
-				.rd_addr_i(pipcut_id_r.instr_id.rs_imm),
+				.rd_addr_i(pipcut_if_r.instr_if.rs_imm),
             .w_addr_i(w_addr),
             .wen_i(rf_wen),
             .w_data_i(rf_wd),
@@ -380,35 +254,43 @@ end
     //assign rs_val_or_zero = pipcut_if_r.instr_if.rs_imm ? rs_val : 32'b0;
     //assign rd_val_or_zero = rd_addr            ? rd_val : 32'b0;
 	 */
-	 always_comb
-	   unique casez (forwardA)
-		2'b10:
-			rs_val_or_zero = pipcut_me_r.alu_result_me;
-		2'b01:
-			rs_val_or_zero = rf_wd;
-		default: 
-			rs_val_or_zero = (pipcut_id_r.instr_id.rs_imm)? pipcut_id_r.rs_val_id : 32'b0;
-		endcase
 	 
-	 always_comb
-		unique casex(forwardB)
-			2'b10: 
-				rd_val_or_zero = pipcut_me_r.alu_result_me;
-			2'b01: 
-				rd_val_or_zero = rf_wd;
-			default:
-				//rd_val_or_zero = (pipcut_id_r.instr_id.rd)? pipcut_id_r.rd_val_id: 32'b0;
-				rd_val_or_zero =  pipcut_id_r.rd_val_id;
-	endcase
-	
+	 ///////////////////////////////////////////////
+	 //hazard control START
+	 ///////////////////////////////////////////////
 
+	 always_comb
+		if(pipcut_if_r.instr_if.rs_imm == pipcut_wb_r.instr_rd)
+			begin
+			rs_val_or_zero = forwardC;
+			end
+		else
+			begin
+			rs_val_or_zero = pipcut_if_r.instr_if.rs_imm? rs_val : 32'b0;
+			end
+			
+	 always_comb
+		if(pipcut_if_r.instr_if.rd == pipcut_wb_r.instr_rd)
+			begin
+			rd_val_or_zero = forwardC;
+			end
+		else 
+			begin
+			rd_val_or_zero = rd_addr? rd_val: 32'b0;
+			end
+	
+	 /////////////////////////////////////////////// 
+	 //hazard control END
+	 //////////////////////////////////////////////
 	 
+	 /*
 	 assign pipcut_id_n.instr_id = pipcut_if_r.instr_if;
 	 assign pipcut_id_n.PC_r_id = pipcut_if_r.PC_r_if;
 	 assign pipcut_id_n.rs_val_id = rs_val;
 	 assign pipcut_id_n.rd_val_id = rd_val;
 	 assign pipcut_id_n.control_id = control_fresh;
-    
+    */
+	 
     // ALU
     alu alu_1 (
             //.rd_i(pipcut_id.rd_val_or_zero_id),
@@ -416,28 +298,29 @@ end
 				.rd_i(rd_val_or_zero),
 				.rs_i(rs_val_or_zero),
             //.op_i(pipcut_id.instr_id),
-				.op_i(pipcut_id_r.instr_id),
+				.op_i(pipcut_if_r.instr_if),
             .result_o(alu_result),
             .jump_now_o(jump_now)
         );
 		  
-		 
+	 /*	 
 	 assign pipcut_me_n.instr_me = pipcut_id_r.instr_id;
 	 assign pipcut_me_n.PC_r_me = pipcut_id_r.PC_r_id;
 	 assign pipcut_me_n.rs_val_me = rs_val_or_zero; 
 	 assign pipcut_me_n.rd_val_me = rd_val_or_zero; 
 	 assign pipcut_me_n.control_me = pipcut_id_r.control_id;
 	 assign pipcut_me_n.alu_result_me = alu_result;
-    
+    */
+	 
     // Data_mem
     assign to_mem_o = '{
-        write_data    : pipcut_me_r.rs_val_me,
+        write_data    : rs_val_or_zero,
         valid         : valid_to_mem_c,
-        wen           : pipcut_me_r.control_me.is_store_op_s,
-        byte_not_word : pipcut_me_r.control_me.is_byte_op_s,
+        wen           : is_store_op_c,
+        byte_not_word : is_byte_op_c,
         yumi          : yumi_to_mem_c
     };
-    assign data_mem_addr = pipcut_me_r.alu_result_me;
+    assign data_mem_addr = alu_result;
     
 	 assign pipcut_wb_n.instr_wb = pipcut_me_r.instr_me;
 	 assign pipcut_wb_n.PC_r_wb = pipcut_me_r.PC_r_me;
@@ -449,14 +332,16 @@ end
 	 
     // stall and memory stages signals
     // rf structural hazard and imem structural hazard (can't load next instruction)
-    assign stall_non_mem = (net_reg_write_cmd && pipcut_wb_r.control_wb.op_writes_rf_s)
+    assign stall_non_mem = (net_reg_write_cmd && op_writes_rf_c)
                         || (net_imem_write_cmd); 
     // Stall if LD/ST still active; or in non-RUN state
     //assign stall = stall_non_mem || (mem_stage_n != DMEM_REQ_ACKED) || (state_r != RUN) || bubble;
-    assign stall = stall_non_mem || (mem_stage_n != 0) || (state_r != RUN) || bubble; 
+    assign stall = stall_non_mem || (mem_stage_n != 0) || (state_r != RUN); 
+	 
+
 	 
     // Launch LD/ST: must hold valid high until data memory acknowledges request.
-    assign valid_to_mem_c = pipcut_me_r.control_me.is_mem_op_s && (mem_stage_r < 2'b10); 
+    assign valid_to_mem_c = is_mem_op_c && (mem_stage_r < 2'b10); 
     
     always_comb 
         begin
@@ -572,42 +457,7 @@ end
 				PC_wen_r       <= PC_wen;
         end
 	 end
-	 ///////////////////////////////////////////////
-	 //hazard control START
-	 ///////////////////////////////////////////////
-	 /*
-    //forwardA logic
-	 always_comb begin
-	    if(pipcut_me_r.control_me.op_writes_rf_s && (pipcut_me_r.instr_me.rd != 0) && (pipcut_me_r.instr_me.rd == pipcut_id_r.instr_id.rs_imm))
-		      forwardA = 2'b10;
-		 else if (pipcut_wb_r.control_wb.op_writes_rf_s && (pipcut_wb_r.instr_wb.rd != 0) && !(pipcut_wb_r.control_wb.op_writes_rf_s && (pipcut_me_r.instr_me.rd != 0) &&
-		          (pipcut_me_r.instr_me.rd === pipcut_id_r.instr_id.rs_imm)) && (pipcut_wb_r.instr_wb.rd === pipcut_id_r.instr_id.rs_imm))
-				forwardA = 2'b01;
-		 else 
-				forwardA = 2'b00;
-	 end
-	 
-	 //forwardB logic
-	 always_comb begin
-		if(pipcut_me_r.control_me.op_writes_rf_s && (pipcut_me_r.instr_me.rd != 0) &&
-				(pipcut_me_r.instr_me.rd == pipcut_id_r.instr_id.rd))
-				forwardB = 2'b10;
-		else if(pipcut_wb_r.control_wb.op_writes_rf_s && (pipcut_wb_r.instr_wb.rd != 0) && !(pipcut_me_r.control_me.op_writes_rf_s && (pipcut_me_r.instr_me.rd != 0) &&
-		          (pipcut_me_r.instr_me.rd === pipcut_id_r.instr_id.rd)) && (pipcut_wb_r.instr_wb.rd === pipcut_id_r.instr_id.rd))
-				forwardB = 2'b01;
-		else 
-				forwardB = 2'b00;
-		end
-		
-		//Bubble logic
-	  assign bubble = (pipcut_id_r.control_id.is_load_op_s || pipcut_id_r.control_id.is_store_op_s) &&
-							 ((pipcut_id_r.instr_id.rd == pipcut_if_r.instr_if.rs_imm) ||
-							 (pipcut_id_r.instr_id.rd == pipcut_if_r.instr_if.rd) ||
-							  control_fresh.is_load_op_s || control_fresh.is_store_op_s);
-	  */
-	 /////////////////////////////////////////////// 
-	 //hazard control END
-	 //////////////////////////////////////////////
+
 	 
 
     
