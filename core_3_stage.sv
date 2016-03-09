@@ -373,7 +373,7 @@ end
             .w_addr_i(w_addr),
             .wen_i(rf_wen),
             .w_data_i(rf_wd),
-            .rs_val_o(rs_val),
+            .rs_val_o(rs_val),gh
             .rd_val_o(rd_val)
         );
     /*
