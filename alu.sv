@@ -48,7 +48,7 @@ module alu (
 				kJALR:
 				begin
 				result_o =  rs_i;
-				//jump_now_o = 1'b1;
+				jump_now_o = 1'b1;
 				end
             
             kSW, kSB:
@@ -76,4 +76,4 @@ module alu (
     
     end // always_comb
     
-endmodule 
+endmodule  

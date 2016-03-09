@@ -172,39 +172,22 @@ package definitions;
         logic [mask_length_gp-1:0] barrier_r_f;
     } debug_s;
 	 
-	 	// a struct for all control signals
-	typedef struct packed {
-			logic is_load_op_s, op_writes_rf_s, is_store_op_s, valid_to_mem_s, is_mem_op_s, is_byte_op_s;
-	} control_s;
+	 typedef struct packed {
+		  logic is_load_op;
+        logic op_writes_rf;
+        logic is_store_op;
+        logic is_mem_op;
+        logic is_byte_op;
+		  instruction_s instruction;
+		  logic [31:0] rs_val;
+		  logic [31:0] rd_val;
+		  logic [9:0] imm_jump_add;
+		  
+	} pipeline_reg;
+
+
 	
-	// a struct for pipcut1, contains instruction and PC_r 
-	typedef struct packed {
-			instruction_s instr_if;
-			logic [imem_addr_width_gp-1:0] PC_r_if;
-			control_s control_if;
-	} pipcut_if_s;
-	
-	typedef struct packed {
-			instruction_s instr_id;
-			control_s control_id;
-			logic [imem_addr_width_gp-1:0] PC_r_id;
-			logic [31:0] rs_val_id, rd_val_id;
-	} pipcut_id_s;
-	
-	typedef struct packed{
-		instruction_s instr_me;
-		control_s control_me;
-		logic [imem_addr_width_gp-1:0] PC_r_me;
-		logic [31:0] rs_val_me, rd_val_me,alu_result_me;
-	} pipcut_me_s;
-	
-	typedef struct packed{
-		instruction_s instr_wb;
-		control_s control_wb;
-		logic [imem_addr_width_gp-1:0] PC_r_wb;
-		logic [31:0] rs_val_wb, rd_val_wb,alu_result_wb;
-	mem_out_s mem_i_wb;
-	}pipcut_wb_s;
+
 	
     
 	 
