@@ -322,13 +322,26 @@ end
     };
     assign data_mem_addr = alu_result;
     
-	 assign pipcut_wb_n.instr_wb = pipcut_me_r.instr_me;
-	 assign pipcut_wb_n.PC_r_wb = pipcut_me_r.PC_r_me;
+	 assign pipcut_wb_n.instr_wb = (~stall)? pipcut_if_r.instr_if : pipcut_wb_r.instr_wb;
+	/*
 	 assign pipcut_wb_n.rs_val_wb = pipcut_me_r.rs_val_me;
 	 assign pipcut_wb_n.rd_val_wb = pipcut_me_r.rd_val_me;
 	 assign pipcut_wb_n.control_wb = pipcut_me_r.control_me;
 	 assign pipcut_wb_n.alu_result_wb = pipcut_me_r.alu_result_me;
 	 assign pipcut_wb_n.mem_i_wb = from_mem_i;
+	*/
+
+	always_ff @ (posedge clk) begin
+		pipcut_wb_r.instr_wb <= pipcut_wb_n.instr_wb;
+		if(!stall) begin
+			pipcut_wb_r.control_wb <= control_fresh;
+			pipcut_wb_r.mem_i_wb <= from_mem_i;
+			pipcut_wb_r.alu_result_wb <= alu_result;
+			pipcut_wb_r.PC_r_wb <= pc_plus1;
+		end
+	end
+
+	assign forwardC = rf_wd;
 	 
     // stall and memory stages signals
     // rf structural hazard and imem structural hazard (can't load next instruction)
@@ -366,7 +379,7 @@ end
     end
     
     // If either the network or instruction writes to the register file, set write enable.
-    assign rf_wen = net_reg_write_cmd || (pipcut_wb_r.control_wb.op_writes_rf_s && (!stall || bubble));
+    assign rf_wen = net_reg_write_cmd || (pipcut_wb_r.control_wb.op_writes_rf_s && (!stall));
     
     // Select the write data for register file from network, the PC_plus1 for JALR,
     // data memory or ALU result
@@ -380,7 +393,7 @@ end
         // On a JALR, we want to write the return address to the destination register.
         else if (pipcut_wb_r.instr_wb==?kJALR) // TODO: this is written poorly. 
             begin
-            rf_wd = (pipcut_wb_r.instr_wb.rd == 0)? 0:pipcut_wb_r.PC_r_wb+1;
+            rf_wd = pipcut_wb_r.PC_r_wb;
             end
         // On a load, we want to write the data from data memory to the destination register.
         else if (pipcut_wb_r.control_wb.is_load_op_s)
@@ -399,63 +412,31 @@ end
     always_ff @ (posedge clk)
 	 begin
         if (!n_reset)
-			begin
-				PC_r            <= 0;
-            barrier_mask_r  <= 0;
-            barrier_r       <= 0;
-            state_r         <= IDLE;
-				instruction_r   <= 0;
-				PC_wen_r        <= 0;
-            exception_o     <= 0;
-            mem_stage_r     <= DMEM_IDLE;
-				pipcut_if_r     <= 0;
-				pipcut_id_r     <= 0;
-				pipcut_me_r     <= 0;
-				pipcut_wb_r     <= 0;
-            end
-        else
-            begin
-				if(PC_wen)
-					begin
-					PC_r <= PC_n;
-					if(jump_now)
-						begin
-						pipcut_if_r     <= 0;
-						pipcut_id_r     <= 0;
-						pipcut_me_r     <= pipcut_me_n;
-						pipcut_wb_r     <= pipcut_wb_n;
-						end
-					else if(net_PC_write_cmd_IDLE)
-						begin
-						pipcut_if_r     <= 0;
-						pipcut_id_r     <= 0;
-						pipcut_me_r     <= 0;
-						pipcut_wb_r     <= 0;
-						end
-					else
-						begin
-						pipcut_if_r     <= pipcut_if_n;
-						pipcut_id_r     <= pipcut_id_n;
-						pipcut_me_r     <= pipcut_me_n;
-						pipcut_wb_r     <= pipcut_wb_n;
-						end
-					end
-				else if(bubble)
-					begin
-					pipcut_if_r <= pipcut_if_r;
-					pipcut_id_r <= 0;
-					pipcut_me_r <= pipcut_me_n;
-					pipcut_wb_r <= pipcut_wb_n;
-					end
-					
-            barrier_mask_r <= barrier_mask_n;
-            barrier_r      <= barrier_n;
-            state_r        <= state_n;
-            exception_o    <= exception_n;
-            mem_stage_r    <= mem_stage_n;
-				instruction_r   <= instruction;
-				PC_wen_r       <= PC_wen;
-        end
+		begin
+        	PC_r            <= 0;
+        	barrier_mask_r  <= {(mask_length_gp){1'b0}};
+        	barrier_r       <= {(mask_length_gp){1'b0}};
+        	state_r         <= IDLE;
+        	instruction_r   <= 0;
+        	PC_wen_r        <= 0;
+        	exception_o     <= 0;
+        	mem_stage_r     <= 2'b00;
+		end
+	  else 
+		begin
+		if(PC_wen) 
+		begin
+			PC_r <= PC_n;
+		end
+
+        	barrier_mask_r <= barrier_mask_n;
+        	barrier_r      <= barrier_n;
+        	state_r        <= state_n;
+        	instruction_r  <= instruction;
+        	PC_wen_r       <= PC_wen;
+        	exception_o    <= exception_n;
+        	mem_stage_r    <= mem_stage_n;
+		end	
 	 end
 
 	 
@@ -500,8 +481,8 @@ end
     // or by an an BAR instruction that is committing
     assign barrier_n = net_PC_write_cmd_IDLE
                     ? net_packet_i.net_data[0+:mask_length_gp]
-                    : ((pipcut_me_r.instr_me ==? kBAR) && ~stall)
-                        ? pipcut_me_r.alu_result_me [0+:mask_length_gp]
+                    : ((pipcut_if_r.instr_if ==? kBAR) && ~stall)
+                        ? alu_result [0+:mask_length_gp]
                         : barrier_r;
     
     // exception_n signal, which indicates an exception
