@@ -1,14 +1,5 @@
 import definitions::*;
 
-// TODO: add trace generator?
-//          - op and registers (can't do PC due to branches) w/ timestamps (must be able to toggle TS)?
-//          - register file trace (initial state and writes?) w/ timestamps (must be able to toggle TS)?
-//          - memory writes trace?
-//          - branch trace?
-//
-
-// TODO: generate make files for everything
-
 module core #(
         parameter imem_addr_width_p = 10,
         parameter net_ID_p = 10'b0000000001
@@ -29,59 +20,62 @@ module core #(
         output logic [31:0]               data_mem_addr
     );
 
-/****************************************************************************
- *                            Adresses And Data                             *
- ****************************************************************************/
-
 // Ins. memory address signals
 logic [imem_addr_width_p-1:0] PC_r, PC_n,
                               pc_plus1, imem_addr,
                               imm_jump_add;
 // Ins. memory output
-instruction_s instruction, instruction_r;
+instruction_s instruction, instruction_r, imem_out, nop_instr;
 
-//Pipeline definitions
-pipeline_reg IFID; //pipeline_signals
-pipeline_reg MEMWB; //pipeline signals
+assign nop_instr = 16'b1111111111111111;
 
-logic [31:0] forward_wd;
+//Pipcuts
+pipcut_if_s pipcut_if_n, pipcut_if_r;   //Between IF and ID
+ //pipcut_id_s  pipcut_id_n,  pipcut_id_r;
+ //pipcut_me_s  pipcut_me_n,  pipcut_me_r;
+pipcut_wb_s pipcut_wb_n, pipcut_wb_r; //Between Mem and WB
 
-//Bubble signals. inserts a nop at the fetch stage or inserts a bubble at the decode stage
-logic insert_nop_n, insert_nop_r;
+// State machine signals
+state_e state_r, state_n;
+
+logic [31:0] forward;
+
+//Bubble signals
+logic bubble_n, bubble_r;
 
 // Result of ALU, Register file outputs, Data memory output data
 logic [31:0] alu_result, rs_val_or_zero, rd_val_or_zero, rs_val, rd_val;
+
 // ALU output to determine whether to jump or not
 logic jump_now;
+
 // Reg. File address
-logic [($bits(instruction.rs_imm))-1:0] rd_addr, wa_addr;  //wa_addr, rs_addr, rd_addr;
+logic [($bits(instruction.rs_imm))-1:0] rd_addr, w_addr;
+
 // Data for Reg. File signals
 logic [31:0] rf_wd;
 
-
-/****************************************************************************
- *                             Control Signals                              *
- ****************************************************************************/
 
 // controller output signals
 logic is_load_op_c,  op_writes_rf_c,
       is_store_op_c, is_mem_op_c,    PC_wen,
       is_byte_op_c,  PC_wen_r;
 
+control_s control_fresh;
+assign control_fresh.is_load_op_s = is_load_op_c;
+assign control_fresh.op_writes_rf_s = op_writes_rf_c;
+assign control_fresh.is_store_op_s = is_store_op_c;
+assign control_fresh.is_mem_op_s = is_mem_op_c;
+assign control_fresh.is_byte_op_s = is_byte_op_c;
+
 // Final signals after network interfere
 logic imem_wen, rf_wen;
 
-
 //Stall signal for long memory accesses. freezes entire pipeline
-logic stall;
+logic stall, stall_non_mem;
 
 //Exception signal
 logic exception_n;
-
-
-/****************************************************************************
- *                       Network and Barrier Signals                        *
- ****************************************************************************/
 
 // Network operation signals
 logic net_ID_match,      net_PC_write_cmd,  net_imem_write_cmd,
@@ -91,32 +85,49 @@ instruction_s net_instruction;
 
 logic [mask_length_gp-1:0] barrier_r,      barrier_n,
   barrier_mask_r, barrier_mask_n;
-logic fwd_rs, fwd_rd;		// for waveform convenience only
-
-
-//==============================================================================
-//                              Instrustion Fetch
-//==============================================================================
-
-//Wire from fetch
-instruction_s imem_out;
 
 // Instructions are shorter than 32 bits of network data
 assign net_instruction = net_packet_i.net_data [0+:($bits(instruction))];
+
 // Selection between network and core for instruction address
-assign imem_addr = (net_imem_write_cmd) ? net_packet_i.net_addr
-                                       : PC_n;
+assign imem_addr = (net_imem_write_cmd) ? net_packet_i.net_addr : PC_n;
+
+//Prevents the next instr from getting read
+assign PC_wen = net_PC_write_cmd_IDLE || (!stall && !bubble_n);
+
+// Determine next PC
+assign pc_plus1     = PC_r + 1'b1;
+assign imm_jump_add = $signed(pipcut_if_r.instr_if.rs_imm)  + $signed(PC_r);
+
+logic valid_to_mem_c, yumi_to_mem_c;
+logic [1:0] mem_stage_r, mem_stage_n, mem_hazard;
+
+  // stall and memory stages signals
+    // rf structural hazard and imem structural hazard (can't load next instruction)
+assign stall_non_mem =  (net_reg_write_cmd && op_writes_rf_c)  || (net_imem_write_cmd);
+
+  // Stall if LD/ST still active; or in non-RUN state
+assign stall =    stall_non_mem || (mem_stage_n != 0)  || (state_r != RUN);
+
+// Launch LD/ST
+assign valid_to_mem_c = is_mem_op_c & (mem_stage_r < 2'b10); //ID_EX_r.ctrl_sigs.is_mem_op_o & (mem_stage_r < 2'b10) : 0;
+
+
+// Selects from network or from rd bits of instr. Extends to correct length of bits
+assign rd_addr = ({{($bits(instruction.rs_imm)-$bits(instruction.rd)){1'b0}}
+                 ,{pipcut_if_r.instr_if.rd}});
+
+assign pipcut_if_n.instr_if  = (stall) ? pipcut_if_r.instr_if : instruction;
+assign pipcut_if_n.control_if = 0;
+
 // Insruction memory
 instr_mem #(.addr_width_p(imem_addr_width_p)) imem
            (.clk(clk)
            ,.addr_i(imem_addr)
            ,.instruction_i(net_instruction)
-           ,.wen_i(imem_wen) 			//  ,.nop_i(nop) 
+           ,.wen_i(imem_wen) 
            ,.instruction_o(imem_out)
            );
-
-//Prevents the next instr from getting read
-assign PC_wen = net_PC_write_cmd_IDLE || (~stall && ~insert_nop_n);
 
 //imem has one cycle delay and we send next cycle's address, PC_n
 //if the PC is not written, the instruction must not change
@@ -124,15 +135,11 @@ always_comb
 begin
   if (PC_wen_r)
     instruction = imem_out;
-  else if (insert_nop_r)
-    instruction = 16'b1111111111111111;
+  else if (bubble_r)
+    instruction = nop_instr;
   else if (stall)
     instruction = instruction_r;
 end
-
-// Determine next PC
-assign pc_plus1     = PC_r + 1'b1;
-assign imm_jump_add = $signed(IFID.instruction.rs_imm)  + $signed(PC_r);
 
 // Next pc is based on network or the instruction
 always_comb
@@ -141,7 +148,7 @@ always_comb
     if (net_PC_write_cmd_IDLE)
       PC_n = net_packet_i.net_addr;
     else
-      unique casez (IFID.instruction)   //branches and jumps happen in exe stage
+      unique casez (pipcut_if_r.instr_if)   //branches and jumps happen in exe stage
         kJALR: begin
           PC_n = alu_result[0+:imem_addr_width_p];
         end
@@ -155,44 +162,27 @@ always_comb
       endcase
   end
 
-//==============================================================================
-//                                IF/ID Pipeline
-//==============================================================================
-
-pipeline_reg IFID_n;
-assign IFID_n.instruction  = (~stall) ? instruction : IFID.instruction;
-assign IFID_n.is_load_op = 0;
-assign IFID_n.op_writes_rf = 0;
-assign IFID_n.is_store_op = 0;
-assign IFID_n.is_mem_op = 0;
-assign IFID_n.is_byte_op = 0;
-
-always_ff @(posedge clk) begin
-  IFID <= IFID_n;
-  insert_nop_r = insert_nop_n;
-end
-
 always_comb
 begin
-  insert_nop_n = 1'b0;
-  unique casez (instruction)
-    kJALR, kBNEQZ, kBEQZ, kBLTZ, kBGTZ, kLW, kLBU, kSW, kSB:
-      insert_nop_n = 1'b1;
+  bubble_n = 1'b0;
+   unique casez (pipcut_if_r.instr_if)
+    kJALR, kBNEQZ, kBEQZ, kBLTZ, kBGTZ:
+      bubble_n = 1'b0;
+	 kLW, kLBU, kSW, kSB:
+		bubble_n = 1'b0;
     default: begin end
-  endcase
-  unique casez (IFID.instruction)
-    kJALR, kBNEQZ, kBEQZ, kBLTZ, kBGTZ, kLW, kLBU, kSW, kSB:
-      insert_nop_n = 1'b0;
+	endcase
+	
+  unique casez (instruction)
+    kJALR, kBNEQZ, kBEQZ, kBLTZ, kBGTZ:
+      bubble_n = 1'b1;
+	kLW, kLBU, kSW, kSB:
+		bubble_n = 1'b1;
     default: begin end
   endcase
 end
 
-//==============================================================================
-//                              Instruction Decode
-//==============================================================================
-
-cl_decode decode (.instruction_i(IFID.instruction)
-                  //,.ctrl_sigs_o(control_sigs)
+cl_decode decode (.instruction_i(pipcut_if_r.instr_if)
                   ,.is_load_op_o(is_load_op_c)
                   ,.op_writes_rf_o(op_writes_rf_c)
                   ,.is_store_op_o(is_store_op_c)
@@ -200,8 +190,7 @@ cl_decode decode (.instruction_i(IFID.instruction)
                   ,.is_byte_op_o(is_byte_op_c)
                   );
 
-// State machine signals
-state_e state_r, state_n;
+
 //cl_state_machine state_machine (.instruction_i(IFID.instruction)
 cl_state_machine state_machine (.instruction_i(instruction) // state changes in ID / EX stage
                                ,.state_i(state_r)
@@ -211,73 +200,45 @@ cl_state_machine state_machine (.instruction_i(instruction) // state changes in 
                                ,.state_o(state_n)
                                );
 
-// Selects from network or from rd bits of instr. Extends to correct length of bits
-assign rd_addr = ({{($bits(instruction.rs_imm)-$bits(instruction.rd)){1'b0}}
-                 ,{IFID.instruction.rd}});
-
 reg_file #(.addr_width_p($bits(instruction.rs_imm))) rf
           (.clk(clk)
-          ,.rs_addr_i(IFID.instruction.rs_imm)
+          ,.rs_addr_i(pipcut_if_r.instr_if.rs_imm)
           ,.rd_addr_i(rd_addr)
           ,.wen_i(rf_wen)
-          ,.w_addr_i (wa_addr)
+          ,.w_addr_i (w_addr)
           ,.w_data_i(rf_wd)
           ,.rs_val_o(rs_val)
           ,.rd_val_o(rd_val)
           );
 
-//Forward MEMWB values to alu input if necessary
+/////////////////////////////////////////////////////////
+///        Hazard / Forwarding start
+/////////////////////////////////////////////////////////
 always_comb
-  if (IFID.instruction.rs_imm == MEMWB.instruction.rd) begin
-    rs_val_or_zero = forward_wd;
-    fwd_rs = 1;
+  if (pipcut_if_r.instr_if.rs_imm == pipcut_wb_r.instr_wb.rd) begin
+    rs_val_or_zero = forward;
   end
   else begin
-    rs_val_or_zero = IFID.instruction.rs_imm ? rs_val : 32'b0;
-    fwd_rs = 0;
+    rs_val_or_zero = pipcut_if_r.instr_if.rs_imm ? rs_val : 32'b0;
   end
 
 always_comb
-  if(IFID.instruction.rd == MEMWB.instruction.rd) begin
-    rd_val_or_zero = forward_wd;
-    fwd_rd = 1;
+  if(pipcut_if_r.instr_if.rd == pipcut_wb_r.instr_wb.rd) begin
+    rd_val_or_zero = forward;
   end
   else begin
     rd_val_or_zero = rd_addr ? rd_val :32'b0;
-    fwd_rd = 0;
   end
-
-//==============================================================================
-//                                   Execute
-//==============================================================================
+/////////////////////////////////////////////////////////
+///        Hazard / Forwarding end
+/////////////////////////////////////////////////////////
 
 alu alu_1 (.rd_i(rd_val_or_zero)
           ,.rs_i(rs_val_or_zero)
-          ,.op_i(IFID.instruction)
+          ,.op_i(pipcut_if_r.instr_if)
           ,.result_o(alu_result)
           ,.jump_now_o(jump_now)
           );
-
-//==============================================================================
-//                                    Memory
-//==============================================================================
-
-//MEM-only signals
-logic valid_to_mem_c, yumi_to_mem_c;
-logic [1:0] mem_stage_r, mem_stage_n, mem_hazard;
-
-// rf structural hazard and imem structural hazard (can't load next instruction)
-
-assign mem_hazard =    (net_reg_write_cmd && op_writes_rf_c)
-                    || (net_imem_write_cmd);
-
-// Stall if LD/ST still active; or in non-RUN state
-assign stall =    mem_hazard
-               || (mem_stage_n != 0)
-               || (state_r != RUN);
-
-// Launch LD/ST
-assign valid_to_mem_c = is_mem_op_c & (mem_stage_r < 2'b10); //ID_EX_r.ctrl_sigs.is_mem_op_o & (mem_stage_r < 2'b10) : 0;
 
 // Data_mem
 assign to_mem_o = '{write_data    : rs_val_or_zero
@@ -299,57 +260,29 @@ always_comb
     if (from_mem_i.yumi)
         mem_stage_n   = 2'b10;
 
-    // If we can commit the LD/ST this cycle, the acknowledge dmem's response
-    if (from_mem_i.valid & ~mem_hazard) //&& ???************************************************
+    if (from_mem_i.valid & ~stall_non_mem) 
       begin
         mem_stage_n   = 2'b00;
         yumi_to_mem_c = 1'b1;
       end
     end
 
-//==============================================================================
-//                               MEM/WB Pipeline
-//==============================================================================
-
-pipeline_reg MEMWB_n;
-
 //Transition Values
-mem_out_s MEMWB_from_mem_i;
-logic [31:0] MEMWB_alu_result;
-logic [imem_addr_width_p-1:0] MEMWB_pc_plus1;
+mem_out_s wb_from_mem_i;
+logic [31:0] wb_alu_result;
+logic [imem_addr_width_p-1:0] wb_pc_plus1;
 
-assign MEMWB_n = (~stall) ? IFID : MEMWB;
+assign pipcut_wb_n = (~stall) ? pipcut_if_r : pipcut_wb_r;
 
-always_ff @(posedge clk) begin
-  MEMWB.instruction <= MEMWB_n.instruction;
-  if (~stall) begin
-    MEMWB.is_load_op   <= is_load_op_c;
-    MEMWB.op_writes_rf <= op_writes_rf_c;
-    MEMWB.is_store_op  <= is_store_op_c;
-    MEMWB.is_mem_op    <= is_mem_op_c;
-    MEMWB.is_byte_op   <= is_byte_op_c;
-
-    MEMWB_from_mem_i   <= from_mem_i;
-    MEMWB_alu_result   <= alu_result;
-    MEMWB_pc_plus1     <= pc_plus1;
-  end
-end
-
-assign forward_wd = rf_wd;
-
-//==============================================================================
-//                                  Write Back
-//==============================================================================
+assign forward = rf_wd;
 
 // Register write could be from network or the controller
-assign rf_wen    = (net_reg_write_cmd || (MEMWB.op_writes_rf && ~stall));
+assign rf_wen    = (net_reg_write_cmd || (pipcut_wb_r.control_wb.op_writes_rf_s && ~stall));
 
-
-//TODO POTENTIAL BUG ******************************************************************
-assign wa_addr = (net_reg_write_cmd)
+assign w_addr = (net_reg_write_cmd)
             ? (net_packet_i.net_addr [0+:($bits(instruction.rs_imm))])
             : ({{($bits(instruction.rs_imm)-$bits(instruction.rd)){1'b0}}
-            ,{MEMWB.instruction.rd}});
+            ,{pipcut_wb_r.instr_wb.rd}});
 
 
 // select the input data for Register file, from network, the PC_plus1 for JALR, Data Memory or ALU result
@@ -357,21 +290,29 @@ always_comb
   begin
     if (net_reg_write_cmd)
       rf_wd = net_packet_i.net_data;
-    else if (MEMWB.instruction==?kJALR) //after ex stage
-      rf_wd =  MEMWB_pc_plus1;
-    else if (MEMWB.is_load_op)
-      rf_wd = MEMWB_from_mem_i.read_data;
+    else if (pipcut_wb_r.instr_wb==?kJALR) //after ex stage
+      rf_wd =  wb_pc_plus1;
+    else if (pipcut_wb_r.control_wb.is_load_op_s)
+      rf_wd = wb_from_mem_i.read_data;
     else
-      rf_wd = MEMWB_alu_result;
+      rf_wd = wb_alu_result;
   end
-
-//==============================================================================
-//                               Sequential Logic
-//==============================================================================
 
 always_ff @ (posedge clk)
   begin
-    if (!n_reset)
+    pipcut_if_r <= pipcut_if_n;
+	 pipcut_wb_r.instr_wb <= pipcut_wb_n.instr_wb;
+    bubble_r = bubble_n;
+	 
+  if (!stall) begin
+    pipcut_wb_r.control_wb <= control_fresh;
+	 
+    wb_from_mem_i   <= from_mem_i;
+    wb_alu_result   <= alu_result;
+    wb_pc_plus1     <= pc_plus1;
+  end
+  
+  if (!n_reset)
       begin
         PC_r            <= 0;
         barrier_mask_r  <= {(mask_length_gp){1'b0}};
@@ -380,7 +321,7 @@ always_ff @ (posedge clk)
         instruction_r   <= 0;
         PC_wen_r        <= 0;
         exception_o     <= 0;
-        mem_stage_r     <= 2'b00;
+        mem_stage_r     <= DMEM_IDLE;
       end
 
     else
@@ -438,11 +379,9 @@ always_comb
 // barrier_n signal, which contains the barrier value
 // it can be set by PC write network command if in IDLE
 // or by an an BAR instruction that is committing
-
-//TODO POTENTIAL BUG ******************************************************************
 assign barrier_n = net_PC_write_cmd_IDLE
                    ? net_packet_i.net_data[0+:mask_length_gp]
-                   : ((IFID.instruction==?kBAR) & ~stall)
+                   : ((pipcut_if_r.instr_if==?kBAR) & ~stall)
                      ? alu_result [0+:mask_length_gp]
                      : barrier_r;
 

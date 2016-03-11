@@ -173,20 +173,41 @@ package definitions;
     } debug_s;
 	 
 	 typedef struct packed {
-		  logic is_load_op;
-        logic op_writes_rf;
-        logic is_store_op;
-        logic is_mem_op;
-        logic is_byte_op;
-		  instruction_s instruction;
-		  logic [31:0] rs_val;
-		  logic [31:0] rd_val;
-		  logic [9:0] imm_jump_add;
-		  
-	} pipeline_reg;
+	 logic is_load_op_s, op_writes_rf_s, is_store_op_s, is_mem_op_s, is_byte_op_s;
+	 } control_s;
+	 
+	 typedef struct packed {
+		  control_s control_if;
+		  instruction_s instr_if;
+		  logic [31:0] rs_val_if;
+		  logic [31:0] rd_val_if;
+		  logic [9:0] imm_jump_add_if;
+	} pipcut_if_s;
 
+	 typedef struct packed {
+		  control_s control_if;
+		  instruction_s instr_id;
+		  logic [31:0] rs_val_id;
+		  logic [31:0] rd_val_id;
+		  logic [9:0] imm_jump_add_id;
+	} pipcut_id_s;
 
+	 typedef struct packed {
+		  control_s control_me;
+		  instruction_s instr_me;
+		  logic [31:0] rs_val_me;
+		  logic [31:0] rd_val_me;
+		  logic [9:0] imm_jump_add_me;
+	} pipcut_me_s;
 	
+	 typedef struct packed {
+		  control_s control_wb;
+		  instruction_s instr_wb;
+		  logic [31:0] rs_val_wb;
+		  logic [31:0] rd_val_wb;
+		  logic [9:0] imm_jump_add_wb;
+		  
+	} pipcut_wb_s;
 
 	
     
